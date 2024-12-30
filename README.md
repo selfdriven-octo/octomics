@@ -18,7 +18,7 @@
 
 ### Tokens
 There are two tokens, one for prototyping (model testing) and one that can be used as a base for community actuation.
-OctoProtos
+#### OctoProtos
 - asset1lmdg26asscqr63ecyv306gy8fzdqcu7lc8ewfj (CIP-68 Based Token)
 - Policy 11d09f751a005b90b56ccaad3f7a4d2c90bef0f106c4d1c66f61c2ca 
 
