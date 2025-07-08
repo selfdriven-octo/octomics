@@ -23,12 +23,12 @@ There are two tokens, one for prototyping (model testing) and one that can be us
 - Policy 11d09f751a005b90b56ccaad3f7a4d2c90bef0f106c4d1c66f61c2ca 
 
 ### Resources
-- [selfdriven.foundation/octomics](https://selfdriven.foundation/octomics)
+- [selfdriven.fyi/octomics](https://selfdriven.fyi/octomics)
 - [docs.selfdriven.foundation/octomics](https://docs.selfdriven.foundation/octomics)
 
 ### Contact Us
 - [Connect @ bsky.app](https://bsky.app/profile/markbyers.selfdriven.social)
-- [selfdriven.foundation/connect](https://selfdriven.foundation/connect)
+- [selfdriven.fyi/connect](https://selfdriven.fyi/connect)
 
 ### About
 - Supported by the [selfdriven Foundation](https://selfdriven.foundation)
