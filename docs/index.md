@@ -7,8 +7,8 @@ title: Home
 
 > Activity, Growth, Verfication, Pools, Exchanges, Cardano & Useful Resources...
 
-<a href="/img/selfdriven-octomics-dark.png" target="_blank" class="text-decoration-none">
-    <img src="/img/selfdriven-octomics-dark.png" class="img-responsive rounded img-fluid">
+<a href="/assets/img/selfdriven-octomics-dark.png" target="_blank" class="text-decoration-none">
+    <img src="/assets/img/selfdriven-octomics-dark.png" class="img-responsive rounded img-fluid">
 </a>
 
 ### Proof of Activity/Growth
