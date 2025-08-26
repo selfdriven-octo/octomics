@@ -5,7 +5,7 @@ title: Home
 
 ## Community-verified activity and growth as a path to useful resources.
 
-Activity, Growth, Verfication, Pools, Exchanges, Cardano & Useful Resources...
+Activity, Growth, Verification, Pools, Exchanges, Cardano & Useful Resources...
 
 <a href="/assets/img/selfdriven-octomics-dark.png" target="_blank" class="text-decoration-none">
     <img src="/assets/img/selfdriven-octomics-dark.png" style="width:100%; border-radius: 15px;" class="img-responsive rounded img-fluid">
