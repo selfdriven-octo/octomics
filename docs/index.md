@@ -5,7 +5,7 @@ title: Home
 
 ## Community-verified activity and growth as a path to useful resources.
 
-Activity, Growth, Verification, Pools, Exchanges, Cardano & Useful Resources...
+Activity, Growth, Verification, Pools, Exchanges, Cardano & Useful Resources... defined by [octology](https://octology.io)
 
 <a href="/assets/img/selfdriven-octomics-dark.png" target="_blank" class="text-decoration-none">
     <img src="/assets/img/selfdriven-octomics-dark.png" style="width:100%; border-radius: 15px;" class="img-responsive rounded img-fluid">
@@ -30,10 +30,6 @@ There are two tokens, one for prototyping (model testing) and one that can be us
 ### Resources
 - [selfdriven.fyi/octomics](https://selfdriven.fyi/octomics)
 - [docs.selfdriven.foundation/octomics](https://docs.selfdriven.foundation/octomics)
-
-### Contact Us
-- [Connect @ bsky.app](https://bsky.app/profile/markbyers.selfdriven.social)
-- [selfdriven.fyi/connect](https://selfdriven.fyi/connect)
 
 ### About
 - Supported by the [selfdriven Foundation](https://selfdriven.foundation)
