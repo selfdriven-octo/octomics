@@ -1,6 +1,6 @@
 ---
 layout: default
-title: About - Octology
+title: About - octomics
 permalink: /about/
 ---
 
