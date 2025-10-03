@@ -4,7 +4,7 @@ title: Network - octomics
 permalink: /network/
 ---
 
-# octomics.network
+# Network
 
 The blockchain based network powering community octomics.
 
