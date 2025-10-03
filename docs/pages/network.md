@@ -15,7 +15,7 @@ The blockchain based network powering community octomics.
 
 ## Playbook
 
-An Ouroboros-based partner chain (Praos-style leader election, stake-weighted validators) and ship a bridgeable, end-to-end reference you can run locally, then harden for testnet/mainnet.
+An Ouroboros-based partner chain, with Praos-style leader election, stake-weighted validators.
 
 Sections: (A) architecture, (B) ceremonies & params, (C) contracts, (D) relayers, (E) docker-compose stack, (F) runbook, (G) security & next steps. All examples assume Cardano Conway era.
 
