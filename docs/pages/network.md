@@ -10,7 +10,7 @@ permalink: /network/
 
 Implementated via the [selfdriven Network Infra Interface ](https://selfdriven.network).
 
-An Ouroboros-based partner chain, with Praos-style leader election, stake-weighted validators.
+An Ouroboros-based drive-chain, with Praos-style leader election, stake-weighted validators.
 
 Sections:
 - (A) Architecture
