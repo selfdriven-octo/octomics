@@ -6,18 +6,22 @@ permalink: /network/
 
 # Network
 
-The blockchain based network powering community octomics.
+**The blockchain based network powering community octomics.**
 
-## Related
-- [selfdriven.network](https://selfdriven.network)
-
-----
-
-## Playbook
+Implementated via the [selfdriven Network Infra Interface ](https://selfdriven.network).
 
 An Ouroboros-based partner chain, with Praos-style leader election, stake-weighted validators.
 
-Sections: (A) architecture, (B) ceremonies & params, (C) contracts, (D) relayers, (E) docker-compose stack, (F) runbook, (G) security & next steps. All examples assume Cardano Conway era.
+Sections:
+- (A) Architecture
+- (B) Ceremonies & Params
+- (C) Contracts
+- (D) Relayers
+- (E) Docker-compose stack
+- (F) Runbook
+- (G) Security
+
+*All examples assume Cardano Conway era.*
 
 ⸻
 
