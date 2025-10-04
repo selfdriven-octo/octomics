@@ -443,3 +443,455 @@ Next:
 
 - [Network Kit - Plutus](/network/kit/plutus)
 
+⸻
+
+## OctoChain Lab Kit V3
+
+### 1.	Aggregate signatures (BLS)
+
+- aggregator/ (Rust) uses blst to aggregate partial signatures → a single G2 aggregate. It returns:
+- agg_sig_g2 (hex-compressed)
+- agg_hash (blake3 transcript over ordered partials)
+- Intent: keep the on-chain payload tiny (one aggregate) and pair it with either:
+- the optimistic flow (no on-chain pairing checks — see #2), or
+- a future SNARK proof that the aggregate is valid (see #3).
+
+### 2.	Optimistic fraud-proof bridge
+
+- Aiken module: aiken_optimistic/validators/optimistic_bridge.ak
+- Pattern: Claim → Challenge → Finalize with a time window.
+- Claim creates an escrow claim UTxO holding:
+- event_id, msg = domain || event_id
+- agg_sig (BLS aggregate, opaque to chain)
+- attesters_root, threshold, window_slots, created_at_slot, challenged=false
+- Challenge (anyone): before deadline, flip challenged (you’ll add bonds/slashing).
+- Finalize: after deadline and if not challenged, allow the spend that performs Unlock/Mint.
+- How to use:
+- Gate your existing Lockbox/Bridge spend by requiring a reference input to a finalized claim UTxO for the same event_id.
+- Add a challenge bond output in Challenge tx; pay out bond if valid, slash if frivolous.
+
+### 3.	ZK light client (Praos) — Noir skeleton
+
+- circuits/praos-light/ is a Noir project stub you can extend to:
+- Verify a batch of PartnerChain headers meet Praos rules (VRF, hash links).
+- Produce a succinct proof with public outputs:
+- headers_root (commitment),
+- agg_sig_commitment (committee/attester commitment),
+- epoch/chain ids.
+- Intended endgame:
+- Verify this SNARK on Cardano via a Plutus SNARK verifier or specialized on-chain verifier when available.
+- This makes BLS aggregation “trust-minimized”: chain checks only the SNARK, not pairings.
+
+⸻
+
+###  How the pieces fit
+- Fast path (today):
+Off-chain relayers create a BLS aggregate and post a Claim. If nobody challenges before the deadline, Finalize releases funds. Small on-chain footprint, cheap gas.
+- Trust-minimized path (future):
+Off-chain creates BLS aggregate and a SNARK proving the aggregate is valid for the posted headers_root / committee. Cardano verifies the SNARK; no challenge period needed.
+
+⸻
+
+Where to wire in your existing v2 kit
+- Keep v2 Lockbox / Bridge / MintPolicy for business logic.
+- Add the optimistic claim as a gating reference:
+- mainnet Unlock path requires a finalized claim referencing the Burn on octonet.
+- octonet Mint path requires a finalized claim referencing the Lock on mainnet.
+
+⸻
+
+Next:
+- Add challenge bonds & slashing flows (escrow, payouts).
+- Implement real time window using slot/time conversions and reference inputs.
+- Swap the placeholder BLS blobs for actual aggregate calls to aggregator/ (expose a small HTTP or CLI).
+- Upgrade relayer to:
+- gather partials → call aggregator → include agg_sig_g2,
+- post Claim, poll window, and post Finalize.
+- Flesh out Noir:
+- VRF gadget & header hashing,
+- batch rules for Praos leader election,
+- produce verifier inputs for a Plutus SNARK verifier interface.
+
+⸻
+
+## OctoChain Lab Kit V4
+
+### 1. Challenge-bond mechanics (Aiken scaffold)
+- New module: aiken_optimistic_bonds/validators/optimistic_bridge_bonds.ak
+- Flow:
+- Claim{claimer_pkh} — requires a claimer bond output in the same tx.
+- Challenge{challenger_pkh, reason} — requires a challenger bond output and flips challenged.
+- Finalize — after window, if not challenged, requires refund to claimer_pkh.
+- It’s a scaffold: the helper has_pkh_output(...) just checks for any output to the PKH. Swap it for strict checks (exact lovelace, token accounting, reference inputs, script hash guards, time window via slot/time conversions).
+	2.	BLS Aggregator CLI (Rust)
+- Folder: aggregator/
+- Aggregates partial signatures (G2) against PKs (G1) using blst.
+- Usage:
+
+cd aggregator
+cargo run --release -- --input partials.json
+# or
+cat partials.json | cargo run --release --
+
+- Input partials.json:
+
+[
+  { "pk_g1": "hex...", "sig_g2": "hex..." },
+  { "pk_g1": "hex...", "sig_g2": "hex..." }
+]
+
+- Output:
+
+{ "agg_sig_g2": "hex...", "agg_hash": "hex..." }
+
+### How to wire this into your bridge
+- On Lock → Mint (mainnet→octonet):
+	1.	Relayers collect partials → run aggregator → produce agg_sig_g2.
+	2.	Post Claim on octonet (bridge consumes it via reference input later).
+	3.	If no Challenge before deadline → Finalize; mint sADA + refund claimer bond.
+- On Burn → Unlock (octonet→mainnet):
+	1.	Same aggregator step on the burn event.
+	2.	Post Claim on mainnet; if unchallenged after window → Finalize; unlock ADA + refund claimer bond.
+
+### Next (hardening steps):
+- Replace placeholder bond checks with:
+- exact lovelace equality,
+- correct recipients (claimer/challenger PKH),
+- optional fee split to treasury.
+- Add resolution path if challenged:
+- Either require a SNARK proof (trust-minimized route), or
+- Require an on-chain verifiable refutation (e.g., mismatched amounts/recipient), paying out the challenger’s bond and slashing claimer’s.
+- Hook the v3 Noir Praos light client once you’re ready to go SNARK-first (no challenge window needed).
+- In the relayer, call the Rust aggregator (small HTTP or CLI), embed agg_sig_g2 in the Claim, and schedule Finalize after window_slots.
+
+⸻
+
+## OctoChain Lab Kit V5
+
+Tightened the Aiken validator and wired the relayer to the Rust aggregator with an auto-finalize loop.
+- Download v5 Kit (strict bonds + time window + Node wrapper)
+- For reference, earlier drops:
+  - v4 (bonds + aggregator CLI)
+  - v3 (optimistic + BLS + ZK skeleton)
+  - v2 (ed25519 threshold + relayer upgrades)
+
+### What v5 adds
+- Aiken (strict optimistic with bonds + time windows)
+- Exact lovelace checks for claimer/challenger bonds.
+- Enforces Claim lower bound ≥ created_at_time_ms, Challenge upper bound ≤ deadline, Finalize lower bound ≥ deadline and challenged == False.
+- File: aiken_optimistic_bonds_strict/validators/optimistic_bridge_bonds_strict.ak.
+- Relayer Node wrapper
+- Calls the Rust BLS aggregator (AGG_BIN) to produce a single agg_sig_g2.
+- Posts Claim with strict bond values and auto-schedules Finalize after WINDOW_MS.
+- Files: relayer/src/index.js, relayer/src/sdk.js, relayer/src/ogmios.js, relayer/src/util.js.
+
+Next bits I can do if you want
+- Replace placeholder PKHs and integrate CSL transaction construction for Claim/Challenge/Finalize.
+- Add resolution path that pays challenger and slashes claimer on successful disputes.
+- Flesh out the Noir Praos light client (VRF gadget, header hash chain) and sketch a Plutus verifier interface.
+
+If you want CSL wiring next, tell me your preferred stack (pure CSL via @dcspark/cardano-multiplatform-lib, Lucid, Mesh) and I’ll bake it into the relayer with real submit calls. ￼
+
+⸻
+
+## OctoChain Lab Kit V6
+
+### What’s in v6
+- relayer/src/lucid.js
+- Creates a Lucid instance for L1/L2 via Kupmios(ogmios, kupo) with network from env.
+- Encodes the ClaimDatum schema so we can inline it at the optimistic-bridge script.
+- relayer/src/sdk-lucid.js
+- submitClaimTx(chain, direction, event, claim, bonds): builds & submits a tx that:
+- sets validFrom(created_at_time_ms),
+- pays to the optimistic script address with inline datum (your claim),
+- adds a claimer bond output (per our scaffold validator).
+- submitFinalizeTx(chain, direction, claimRef): spends a claim UTxO with a Finalize redeemer after the window (placeholder selection logic; wire Kupo filter by event_id).
+- relayer/src/index-lucid.js
+- Relayer loop that:
+- calls the Rust BLS aggregator (AGG_BIN) to aggregate partials,
+- posts Claim via Lucid,
+- auto-schedules Finalize after WINDOW_MS.
+
+Env you’ll want to set
+
+# L1 (Cardano) and L2 (PartnerChain)
+L1_OGMIOS_URL=ws://localhost:1337
+L1_KUPO_URL=http://localhost:1442
+L1_NETWORK=0
+L1_PAYMENT_SK_HEX=<>   # hex or bech32-priv acceptable by Lucid
+
+L2_OGMIOS_URL=ws://localhost:2337
+L2_KUPO_URL=http://localhost:2442
+L2_NETWORK=0
+L2_PAYMENT_SK_HEX=<>
+
+# Optimistic bridge script addresses (L1/L2)
+CLAIM_SCRIPT_ADDRESS_L1=addr_test1...
+CLAIM_SCRIPT_ADDRESS_L2=addr_test1...
+
+# Relayer settings
+DOMAIN_HEX=706172746e65722d6272696467652d7631   # "partner-bridge-v1"
+WINDOW_MS=1800000
+CLAIMER_BOND=2000000
+CHALLENGER_BOND=2000000
+AGG_BIN=./aggregator/target/release/partnerchain-aggregator
+CLAIMER_PKH_HEX=<payer keyhash hex>
+
+### Next improvements:
+- The bond model in the strict Aiken scaffold still “pays to claimer PKH” to satisfy checks. For real security, change it to script-locked bond escrow, and update submitClaimTx to lock the bond at that script.
+- In submitFinalizeTx, replace the naive utxosAt() selection with a Kupo query that filters for the claim UTxO by event_id encoded in datum.
+- Add real Finalize redeemer serialization matching your Aiken constructors.
+- If you’re ready, I can:
+- add the bond-escrow script and wire the Lucid builders to lock/release bonds correctly,
+- add Kupo REST queries (by datum JSON path) to find the exact claim,
+- or translate the current JS to TypeScript with strict types for all datum/redeemer schemas.
+
+⸻
+
+## OctoChain Lab Kit V7
+
+Done. I switched bonds to a script-escrow and wired Lucid to lock/refund them, plus added a Kupo filter scaffold.
+- Download v7 Kit (bond escrow + Lucid wiring + Kupo filter)
+- For context, previous drops:
+- v6 (Lucid wiring)
+- v5 (strict bonds + auto finalize)
+- v4 (bonds + aggregator CLI)
+- v3 (optimistic + BLS + ZK skeleton)
+- v2 (ed25519 threshold + relayer upgrades)
+
+What changed in v7
+- Aiken bond-escrow validator (aiken_bond_escrow/validators/escrow.ak)
+- Two redeemers: Finalize (refund claimer) and ChallengeWin (pay challenger).
+- Checks exact lovelace value and recipient PKH. In production, bind spend to a finalized-claim reference.
+- Lucid SDK
+- submitClaimTx now:
+- Pays to the claim script with inline claim datum.
+- Locks the claimer bond at the escrow script with an EscrowDatum.
+- submitFinalizeTx:
+- Finds the claim UTxO (via Kupo helper, placeholder).
+- Collects claim + escrow UTxOs and refunds claimer in the same tx.
+- Kupo helper
+- findClaimUtxoByEventId(kupoUrl, scriptAddress, eventIdHex) scaffolds fetching UTxOs and picking the right one. Replace with a precise datum filter using Kupo’s API or your indexer.
+
+Next steps
+- Add a dedicated challenge transaction:
+- lock challenger bond at escrow (role=CHALLENGER_BOND),
+- route ChallengeWin payouts appropriately.
+- Bind escrow spends to the finalized claim using a reference input check (datum equality).
+- Implement Kupo datum filtering (exact endpoint wiring) and decode inline datums from CBOR to match event_id.
+- Upgrade relayer to use index-lucid.js end-to-end with real event extraction from Ogmios/Kupo.
+
+⸻
+
+## OctoChain Lab Kit V8
+
+Added the Challenge path and reference-claim binding scaffolds, plus a Lucid submitter for challenges.
+
+What v8 adds
+- Claim validator (Aiken)
+- Challenge spend must be before the deadline, re-output the claim at the same script with challenged=true, and include a challenger bond output (escrow recommended). (Datum validation of the re-output is marked TODO where you’ll decode and check fields.)
+- Escrow validator (Aiken)
+- Now expects a reference input to a claim with matching event_id when paying out (scaffold has_reference_claim to fill in).
+- Lucid SDK
+- submitChallengeTx(...) consumes the claim, re-creates it challenged, and locks a challenger bond at the escrow script.
+- submitFinalizeTx(...) collects both the claim and the escrow and refunds the claimer after the window.
+- Kupo helper
+- Basic fetch + placeholder selection; slot in precise datum-based filtering.
+
+Finish:
+- Implement reference-claim checks in both validators (read reference inputs, decode datums, compare event_id + status).
+- Define exact redeemer encodings and use them instead of Data.void() in Lucid.
+- Add ChallengeWin resolution path:
+- pay challenger from challenger-escrow and optionally slash claimer’s bond if fraud is proven,
+- gate via proof (on-chain checks or SNARK verification, per your roadmap).
+
+⸻
+
+## OctoChain Lab Kit V9
+
+Pushed the next pass with datum checks and a ChallengeWin path.
+- Download v9 Kit (datum-checked Challenge + ref-claim escrow gating + ChallengeWin)
+
+What’s new
+- Aiken – Claim validator
+- On Challenge, it now inspects the re-output’s inline datum and ensures it matches the original datum with only challenged flipped to true. (I left decode_claim_datum as a scaffold—swap in from_data<ClaimDatum> in your real project.)
+- Aiken – Escrow validator
+- Escrow spends require a reference claim; the scaffold ref_claim_matches is ready to enforce event_id and challenge status.
+- Lucid SDK
+- submitChallengeTx(...) re-outputs the claim as challenged=true and locks a challenger bond at escrow.
+- submitChallengeWinTx(...) spends the challenger escrow using the claim as a reference, paying the challenger.
+- submitFinalizeTx(...) collects the claim + claimer escrow and includes the claim as a reference input.
+- Kupo helper
+- New findUtxoByPredicate(...) for more precise selection; wire in inline-datum decoding to match event_id.
+
+Short path to “prod ready”
+1.	In Aiken:
+- Replace scaffold decoders with real from_data for both Claim & Escrow datums.
+- In escrow, fully enforce: reference-claim’s event_id equals this escrow’s, and challenged is False (Finalize) or True (ChallengeWin).
+2.	In the relayer:
+- Encode real redeemers instead of Data.void() (constructors must match Aiken).
+- Decode inline datums from Kupo (CBOR) to pick exact UTxOs (by event_id & role).
+3.	Economics:
+- Add payout logic: on ChallengeWin, pay challenger; optionally slash claimer escrow.
+- Treasury split / fees if desired.
+
+⸻
+
+## OctoChain Lab Kit V10
+
+Replaced placeholder redeemers with concrete encodings and added inline-datum decoding + precise UTxO selection.
+- Download v10 Kit (real redeemers + Kupo datum decoding)
+
+Highlights
+- Redeemers (Lucid Constr) aligned to Aiken order:
+- Claim: Claim(claimer_pkh) = Constr(0, [...]), Challenge(challenger_pkh, reason) = Constr(1, [...]), Finalize() = Constr(2, []).
+- Escrow: Finalize() = Constr(0, []), ChallengeWin() = Constr(1, []).
+- Kupo helpers now parse inline datum CBOR to find the exact UTxOs:
+- findClaimUtxoByEventId(kupoUrl, claimAddr, eventIdHex)
+- findEscrowUtxo(kupoUrl, escrowAddr, roleStr, eventIdHex)
+- SDK updates:
+- All submitters (Claim, Challenge, Finalize, ChallengeWin) pass proper redeemers.
+- Finalize/ChallengeWin include the claim UTxO as a reference input for escrow validation.
+
+Next:
+- swap the Aiken scaffolds for proper from_data<...> decoding in the on-chain code,
+- add unit tests (Aiken test harness + JS e2e against a devnet with Ogmios+Kupo),
+- or wire the ZK light client stub to gate Finalize instead of (or in addition to) the time window. ￼
+
+⸻
+
+## OctoChain Lab Kit V11
+
+What changed in v11
+- Aiken (on-chain)
+- Swapped the scaffolds for real from_data decoding in both Claim and Escrow validators.
+- Finalize is now gated by either:
+- time window expiry or
+- a ZK verifier reference UTxO carrying ZkDatum(event_id, epoch, ok=true).
+- Included a dummy ZK verifier script (aiken_zk_verifier/) as a stand-in for your Noir/Plonk verifier.
+- Tests
+- Aiken test stubs for both validators (ready to expand with full Tx contexts).
+- JS tests (relayer/tests/datum_redeemer.test.mjs) that round-trip datum encode/decode and verify redeemer encodings.
+- Relayer / Lucid
+- submitFinalizeTx(..., { zk: true }) will read a ZK proof UTxO (via ZK_SCRIPT_ADDRESS_*) instead of waiting out the window.
+- Kupo helpers now decode inline datum CBOR to select exact claim/escrow UTxOs by event_id (and escrow role), plus a finder for ZK proof UTxOs.
+
+Wire-up checklist
+	1.	Addresses & keys
+- Set CLAIM_SCRIPT_ADDRESS_*, ESCROW_SCRIPT_ADDRESS_*, ZK_SCRIPT_ADDRESS_*.
+- Provide *_PAYMENT_SK_HEX, *_OGMIOS_URL, *_KUPO_URL.
+	2.	Redeemer ordering
+- Ensure your compiled Aiken constructors match:
+- Claim: Claim(0), Challenge(1), Finalize(2)
+- Escrow: Finalize(0), ChallengeWin(1)
+	3.	ZK flow (stub → real)
+- Replace the dummy ZK verifier with your actual verifier that only creates a proof UTxO when the SNARK validates.
+- Option: mint a proof NFT at the verifier and require it as the reference input instead of decoding inline datum.
+	4.	Tests you’ll likely add next
+- Aiken: scenario tests—Claim→no challenge→Finalize (time); Claim→Challenge→ChallengeWin; Claim→ZK proof→Finalize (no time).
+- JS: Kupo parsing of real responses; integration against a devnet Ogmios+Kupo.
+
+Next:
+- script a Noir→proof→verifier UTxO pipeline stub,
+- or add full Aiken Tx-context tests (using fixtures) to enforce each state transition end-to-end. ￼
+
+⸻
+
+## OctoChain Lab Kit V12
+
+What’s in v12
+- Noir circuit stub (noir/partnerchain_praos_lc/)
+- Nargo.toml + src/main.nr scaffold for a Praos-style light client. It currently just commits (event_id, epoch) — swap in real header/VRF checks when ready.
+- Verifier UTxO creator (relayer/src/create-zk-utxo.js)
+- After (stub) verifying a Noir proof, it mints a UTxO at your ZK_SCRIPT_ADDRESS_* carrying ZkDatum{ event_id, epoch, ok:true }.
+- Usage: node src/create-zk-utxo.js <event_id_hex> <epoch> <proofPath>
+- Aiken state-machine tests (scaffold) (aiken_tests_tx/)
+- Three test files outline tx contexts for:
+- Claim → Finalize (time path)
+- Claim → Challenge → ChallengeWin
+- Claim → Finalize (ZK path)
+
+How to wire it together
+	1.	Build a test proof (stub):
+- cd noir/partnerchain_praos_lc && nargo check && nargo prove p --witness witness.toml
+	2.	Post a zk_ok UTxO:
+- cd relayer && node src/create-zk-utxo.js <event_id_hex> <epoch> noir/partnerchain_praos_lc/proofs/p.proof
+	3.	Finalize on L1 with proof:
+- Call your v11 submitFinalizeTx(..., { zk: true }) — the claim script accepts via the reference ZK UTxO.
+
+Next upgrades I can tackle
+- Replace the Noir stub with a real Praos/VRF circuit and a tiny verifier service.
+- Flesh out the Aiken tests into executable transaction fixtures (covering bond flows, challenge timing, payouts).
+- Integrate proof NFT minting to make the ZK reference uniquely bindable per event_id.
+
+⸻
+
+## OctoChain Kit V0.1
+
+Heck yeah — I’ve packaged a Version 0.1 you can start running and poking today, with both the Praos/VRF circuit outline and a minimal verifier service wired into the zk flow.
+- Download PartnerChain Bridge Kit — v0.1
+
+What you’re getting in v0.1
+- Noir “Praos LC” circuit (stub but structured): noir/partnerchain_praos_lc/
+- Public inputs laid out: event_id, epoch, header_hash, parent_hash, slot, vrf_output, vrf_threshold.
+- Witness placeholders: vrf_secret, (future) inclusion proof.
+- Returns a commitment; constraints are dummies you’ll swap for Poseidon + VRF gadget.
+- witness.example.toml and a short README for nargo commands.
+- Verifier Service (dev-only): verifier-service/
+- Tiny Express server with POST /verify that shells out to nargo verify.
+- You pass { event_id_hex, epoch, proof_path }; it returns { ok: true } only if the proof verifies.
+- This sits between proving and minting the zk_ok UTxO—so you can test the trust-minimized finalize path.
+- Relayer helper → zk_ok UTxO: relayer/src/create-zk-utxo.js
+- Calls the verifier-service; only on ok does it build a Lucid tx to mint a ZK-proof UTxO at your ZK_SCRIPT_ADDRESS_*.
+- Works with Ogmios+Kupo (Kupmios provider). Env-var driven.
+- Dev scaffolding
+- docker-compose.example.yml with placeholders for Ogmios/Kupo + verifier.
+- RUNBOOK.md with step-by-step to run the whole thing locally.
+- Top-level README.md & VERSION.txt.
+
+Quick start (local)
+1.	spin up the verifier:
+
+cd verifier-service
+cp .env.example .env
+npm i
+npm run dev  # :8787
+
+
+2.	make a (stub) proof:
+
+cd noir/partnerchain_praos_lc
+cp witness.example.toml witness.toml  # fill values
+nargo check
+nargo prove p --witness witness.toml
+nargo verify p --proof proofs/p.proof
+
+
+3.	mint a zk_ok UTxO (guarded):
+
+cd relayer
+npm i
+export ZK_SCRIPT_ADDRESS_L1=addr_test1...
+export L1_OGMIOS_URL=ws://localhost:1337
+export L1_KUPO_URL=http://localhost:1442
+export L1_NETWORK=0
+export L1_PAYMENT_SK_HEX=<hex>
+export VERIFIER_URL=http://localhost:8787/verify
+
+node src/create-zk-utxo.js <event_id_hex> <epoch> ../noir/partnerchain_praos_lc/proofs/p.proof
+
+
+4.	finalize on L1 with ZK:
+- Use the v11 submitFinalizeTx(..., { zk: true }) from earlier. It will read that zk_ok UTxO as a reference input.
+
+What’s left to toggle into “real”
+- Replace Noir’s XOR placeholders with:
+- Poseidon (or similar) for commitments,
+- a proper Praos/VRF gadget (or a Schnorr/ed25519 VRF you prefer),
+- inclusion proof path (Merkle/Accumulator).
+- Harden the verifier-service (validate the proof’s public inputs, authenticate clients, add logs).
+- Deploy your Aiken validators (from v11), set CLAIM_SCRIPT_ADDRESS_*, ESCROW_SCRIPT_ADDRESS_*, ZK_SCRIPT_ADDRESS_*.
+
+Next:
+- drop in specific Poseidon hash + a recommended VRF gadget plan for Noir, or
+- add a Dockerfile for the verifier-service and a Compose profile that also boots a preprod Ogmios+Kupo pair for you. ￼
