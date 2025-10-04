@@ -236,3 +236,35 @@ References
 
 ⸻
 
+## DevKit
+
+A ready-to-run script that spins up a single-node Conway devnet and attaches Ogmios + Kupo in Docker.
+- [Download the macOS Devnet Kit](https://github.com/selfdriven-octo/octomics/tree/main/docs/kits)
+
+What’s inside:
+- devnet-conway-mac.sh — start the node (via cardano-testnet) then launch Ogmios (:1337) + Kupo (:1442).
+- devnet-stop.sh — stop just the Ogmios/Kupo containers.
+- .env.example — tweak ports/paths/images if you want.
+- README-mac.md — bite-size instructions.
+
+Quick start:
+
+unzip devnet-conway-macos-kit.zip
+cd devnet-macos
+chmod +x devnet-conway-mac.sh devnet-stop.sh
+
+### make sure 'cardano-testnet' and 'cardano-cli' are in PATH (Conway-capable)
+./devnet-conway-mac.sh up     # starts node in your shell, then Ogmios+Kupo
+
+### health checks
+./devnet-conway-mac.sh status
+
+### app env
+export CARDANO_NODE_SOCKET_PATH=$HOME/devnet/conway-one/bft1/node.socket
+export OGMIOS_URL=ws://localhost:1337
+export KUPO_URL=http://localhost:1442
+
+Notes:
+- Keep up running in its Terminal tab so the node stays alive; you can re-run up anytime to reattach Ogmios/Kupo.
+- If you prefer different ports or a different workspace, edit .env.example or export env vars before running.
+- down stops the indexers only; the node is managed by cardano-testnet in your shell.
