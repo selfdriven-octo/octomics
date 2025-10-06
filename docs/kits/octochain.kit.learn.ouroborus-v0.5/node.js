@@ -168,6 +168,7 @@ function handleMessage(msg, ws) {
         const res = addToMempool(msg.tx);
         if (res.ok && res.note !== 'duplicate') {
           broadcast(wss, { type: 'tx', tx: msg.tx });
+          push('mempool.accept', { txid: res.id });
           log(`Mempool accepted tx ${res.id.slice(0,8)}...`);
         }
       }
@@ -217,6 +218,7 @@ function tryAddBlock(b) {
   addressBook.set(issuerAddress, b.pubkey);
   broadcast(wss, { type: 'tip', height, hash: b.hash });
   log(`Accepted block #${b.index} slot=${b.slot} by ${b.issuer}`);
+  push('block.accept', { index: b.index, hash: b.hash, issuer: b.issuer, slot: b.slot });
 }
 
 // --- Slot loop ---
@@ -250,16 +252,19 @@ function tick() {
     log(`FORGED block #${b.index} score ok (thr≈${thrPct.toFixed(6)}%)`);
 
   } else if (req.method === 'POST' && url.pathname === '/rpc') {
+    // Batch support: body may be a single object or an array
+
     let body='';
     req.on('data', chunk => body += chunk);
     req.on('end', () => {
       try {
         const call = JSON.parse(body||'{}');
-        const { id, method, params } = call;
-        function reply(result, error) {
-          res.end(JSON.stringify({ jsonrpc:'2.0', id, result, error }));
-        }
-        switch (method) {
+        const calls = Array.isArray(call) ? call : [call];
+        const results = [];
+        function handleOne(one) {
+          const { id, method, params } = one || {};
+          function build(result, error) { return { jsonrpc:'2.0', id, result, error }; }
+          switch (method) {
           case 'ping': return reply('pong');
           case 'whoami': {
             const addr = pubkeyToAddress(keys.publicKeyPem);
@@ -302,8 +307,12 @@ function tick() {
             return reply({ address: addr });
           }
           default:
-            return reply(null, 'method not found');
+            return build(null, 'method not found');
+          }
         }
+        for (const one of calls) results.push(handleOne(one));
+        const out = Array.isArray(call) ? results : results[0];
+        res.end(JSON.stringify(out));
       } catch (e) {
         res.statusCode = 400;
         return res.end(JSON.stringify({ error: 'bad json' }));
@@ -318,6 +327,7 @@ function tick() {
   
 // --- Tiny REST API (no deps) ---
 const http = require('http');
+const WebSocket = require('ws');
 const HTTP_PORT = parseInt(getArg('httpPort', String(PORT + 1000)), 10);
 
 const server = http.createServer((req, res) => {
@@ -334,16 +344,19 @@ const server = http.createServer((req, res) => {
     res.end(JSON.stringify({ self: { name: NAME, stake: STAKE }, peers: list }));
 
   } else if (req.method === 'POST' && url.pathname === '/rpc') {
+    // Batch support: body may be a single object or an array
+
     let body='';
     req.on('data', chunk => body += chunk);
     req.on('end', () => {
       try {
         const call = JSON.parse(body||'{}');
-        const { id, method, params } = call;
-        function reply(result, error) {
-          res.end(JSON.stringify({ jsonrpc:'2.0', id, result, error }));
-        }
-        switch (method) {
+        const calls = Array.isArray(call) ? call : [call];
+        const results = [];
+        function handleOne(one) {
+          const { id, method, params } = one || {};
+          function build(result, error) { return { jsonrpc:'2.0', id, result, error }; }
+          switch (method) {
           case 'ping': return reply('pong');
           case 'whoami': {
             const addr = pubkeyToAddress(keys.publicKeyPem);
@@ -386,8 +399,12 @@ const server = http.createServer((req, res) => {
             return reply({ address: addr });
           }
           default:
-            return reply(null, 'method not found');
+            return build(null, 'method not found');
+          }
         }
+        for (const one of calls) results.push(handleOne(one));
+        const out = Array.isArray(call) ? results : results[0];
+        res.end(JSON.stringify(out));
       } catch (e) {
         res.statusCode = 400;
         return res.end(JSON.stringify({ error: 'bad json' }));
@@ -398,7 +415,32 @@ const server = http.createServer((req, res) => {
     res.end(JSON.stringify({ error: 'not found' }));
   }
 });
-server.listen(HTTP_PORT, () => log(`HTTP listening on :${HTTP_PORT} (/tip, /chain?from=0, /peers)`));
+server.listen(HTTP_PORT, () => log(`HTTP listening on :${HTTP_PORT} (/tip, /chain?from=0, /peers, /rpc, WS:/ws)`));
+
+// --- WebSocket notifications (clients) ---
+const wssClients = new WebSocket.Server({ noServer: true });
+const clientSockets = new Set();
+wssClients.on('connection', (ws) => {
+  clientSockets.add(ws);
+  ws.on('close', () => clientSockets.delete(ws));
+});
+server.on('upgrade', (req, socket, head) => {
+  const { url } = req;
+  if (url === '/ws') {
+    wssClients.handleUpgrade(req, socket, head, (ws) => {
+      wssClients.emit('connection', ws, req);
+    });
+  } else {
+    socket.destroy();
+  }
+});
+function push(event, data) {
+  const payload = JSON.stringify({ event, data });
+  for (const ws of clientSockets) {
+    if (ws.readyState === WebSocket.OPEN) ws.send(payload);
+  }
+}
+
 
 setTimeout(tick, SLOT_MS);
 }
@@ -412,6 +454,7 @@ log(`Node started. stake=${STAKE}, f=${F_ACTIVE}, slotMs=${SLOT_MS}, peers=${PEE
 
 // --- Tiny REST API (no deps) ---
 const http = require('http');
+const WebSocket = require('ws');
 const HTTP_PORT = parseInt(getArg('httpPort', String(PORT + 1000)), 10);
 
 const server = http.createServer((req, res) => {
@@ -428,16 +471,19 @@ const server = http.createServer((req, res) => {
     res.end(JSON.stringify({ self: { name: NAME, stake: STAKE }, peers: list }));
 
   } else if (req.method === 'POST' && url.pathname === '/rpc') {
+    // Batch support: body may be a single object or an array
+
     let body='';
     req.on('data', chunk => body += chunk);
     req.on('end', () => {
       try {
         const call = JSON.parse(body||'{}');
-        const { id, method, params } = call;
-        function reply(result, error) {
-          res.end(JSON.stringify({ jsonrpc:'2.0', id, result, error }));
-        }
-        switch (method) {
+        const calls = Array.isArray(call) ? call : [call];
+        const results = [];
+        function handleOne(one) {
+          const { id, method, params } = one || {};
+          function build(result, error) { return { jsonrpc:'2.0', id, result, error }; }
+          switch (method) {
           case 'ping': return reply('pong');
           case 'whoami': {
             const addr = pubkeyToAddress(keys.publicKeyPem);
@@ -480,8 +526,12 @@ const server = http.createServer((req, res) => {
             return reply({ address: addr });
           }
           default:
-            return reply(null, 'method not found');
+            return build(null, 'method not found');
+          }
         }
+        for (const one of calls) results.push(handleOne(one));
+        const out = Array.isArray(call) ? results : results[0];
+        res.end(JSON.stringify(out));
       } catch (e) {
         res.statusCode = 400;
         return res.end(JSON.stringify({ error: 'bad json' }));
@@ -492,6 +542,31 @@ const server = http.createServer((req, res) => {
     res.end(JSON.stringify({ error: 'not found' }));
   }
 });
-server.listen(HTTP_PORT, () => log(`HTTP listening on :${HTTP_PORT} (/tip, /chain?from=0, /peers)`));
+server.listen(HTTP_PORT, () => log(`HTTP listening on :${HTTP_PORT} (/tip, /chain?from=0, /peers, /rpc, WS:/ws)`));
+
+// --- WebSocket notifications (clients) ---
+const wssClients = new WebSocket.Server({ noServer: true });
+const clientSockets = new Set();
+wssClients.on('connection', (ws) => {
+  clientSockets.add(ws);
+  ws.on('close', () => clientSockets.delete(ws));
+});
+server.on('upgrade', (req, socket, head) => {
+  const { url } = req;
+  if (url === '/ws') {
+    wssClients.handleUpgrade(req, socket, head, (ws) => {
+      wssClients.emit('connection', ws, req);
+    });
+  } else {
+    socket.destroy();
+  }
+});
+function push(event, data) {
+  const payload = JSON.stringify({ event, data });
+  for (const ws of clientSockets) {
+    if (ws.readyState === WebSocket.OPEN) ws.send(payload);
+  }
+}
+
 
 setTimeout(tick, SLOT_MS);

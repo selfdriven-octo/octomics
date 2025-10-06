@@ -129,3 +129,60 @@ Methods:
    ```bash
    curl -s http://localhost:5001/rpc -d '{"jsonrpc":"2.0","id":3,"method":"submitTx","params":{"tx":{...}}}'
    ```
+
+
+## Tiny JS client
+A no-deps wallet/tx helper: `client.js`
+
+### Generate a wallet
+```bash
+node client.js init --name alice --out wallet/alice.json
+node client.js addr --wallet wallet/alice.json
+```
+
+### Send a transaction
+1) Get your address UTXOs after your node has forged at least one block:
+```bash
+RPC=http://localhost:5001/rpc
+ADDR=$(node -e "console.log(require('./wallet/alice.json').address)")
+curl -s $RPC -d '{"jsonrpc":"2.0","id":1,"method":"getUTXO","params":{"address":"'"$ADDR"'"}}' | jq .
+```
+2) Send:
+```bash
+node client.js send --rpc http://localhost:5001/rpc --wallet wallet/alice.json --to <RECIPIENT_ADDR> --amount 10 --fee 1
+```
+
+### Other commands
+```bash
+node client.js whoami --rpc http://localhost:5001/rpc
+node client.js utxo --rpc http://localhost:5001/rpc --address <ADDR>
+```
+
+
+## Batch JSON-RPC
+POST an array to `/rpc`:
+```json
+[
+  {"jsonrpc":"2.0","id":1,"method":"getTip"},
+  {"jsonrpc":"2.0","id":2,"method":"whoami"}
+]
+```
+
+## WebSocket notifications
+Connect to `ws://<host>:<httpPort>/ws` to receive JSON messages:
+```json
+{"event":"mempool.accept","data":{"txid":"..."}}
+{"event":"block.accept","data":{"index":12,"hash":"...","issuer":"A","slot":42}}
+```
+
+## Browser demo
+Open `web/index.html` in a modern browser. Use RPC like `http://localhost:5001/rpc`, click **Connect WS** for events, generate keys, and send a tx.
+
+## Docker
+```bash
+docker compose up --build
+```
+Exposes:
+- node1: WS 4001, HTTP 5001
+- node2: WS 4002, HTTP 5002
+- node3: WS 4003, HTTP 5003
