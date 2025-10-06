@@ -12,4 +12,8 @@ Works with the [selfdriven Network Infra Interface](https://www.selfdriven.netwo
 
 An Ouroboros-based drive-chain, with Praos-style leader election, stake-weighted validators.
 
+- [Kits Code](https://github.com/selfdriven-octo/octomics/tree/main/docs/kits)
+
+## Use Examples
+- MAV100 Student Run Chain
 
