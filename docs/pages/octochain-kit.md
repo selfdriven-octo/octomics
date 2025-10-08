@@ -14,6 +14,9 @@ An Ouroboros-based drive-chain, with Praos-style leader election, stake-weighted
 
 - [Kits Code](https://github.com/selfdriven-octo/octomics/tree/main/docs/kits)
 
+### Target Node Devices
+- [Raspberry Pi 500+](https://www.raspberrypi.com/products/raspberry-pi-500-plus/)
+
 ## Use Examples
 - MAV100 Student Run Chain
 
