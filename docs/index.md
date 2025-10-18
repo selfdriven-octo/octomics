@@ -36,4 +36,4 @@ There are two tokens, one for prototyping (model testing) and one that can be us
 
 ### Roadmap
 - Implement using OctoProtos with use-case partners.
-- Build the [octochain Kit](/octochain-kit/)
+- Build the [octochain Kit](/octochain/kit/)

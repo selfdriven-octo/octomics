@@ -1,7 +1,7 @@
 ---
 layout: default
 title: octochain Kiy - octomics
-permalink: /octochain-kit/
+permalink: /octochain/kit/
 ---
 
 # octochain Kit
@@ -13,9 +13,7 @@ Works with the [selfdriven Network Infra Interface](https://www.selfdriven.netwo
 
 ### Resources
 - [Kits Code](https://github.com/selfdriven-octo/octomics/tree/main/docs/kits)
-
-### Target Node Devices
-- [Raspberry Pi 500+](https://www.raspberrypi.com/products/raspberry-pi-500-plus/)
+- [Rsearch](/octochain/research)
 
 ### Use Examples
 - MAV100 Student Run Chain
