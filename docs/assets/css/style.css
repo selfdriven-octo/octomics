@@ -34,6 +34,11 @@ a {
 
 .nav {
 	backdrop-filter: blur(42px);
+	padding: .34em 0em;
+}
+
+.nav-logo {
+	backdrop-filter: blur(42px);
     pointer-events: auto;
     background-color: #ffffffb3;
     border-radius: 3em;
