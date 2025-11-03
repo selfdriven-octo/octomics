@@ -4,9 +4,9 @@ title: Games - Energy Within - octomics
 permalink: /energy/within/games/
 ---
 
-# Energy Within - Games
+## Energy Within - Games
 
-## How other economies can be used as a source of inbound energy.
+**How game play can be used as a source of energy from within a community.**
 
 ### [Finding Octo](https://selfdriven.fyi/findingocto)
 

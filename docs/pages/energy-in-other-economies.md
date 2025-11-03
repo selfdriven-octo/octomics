@@ -4,9 +4,9 @@ title: Economies - Energy In - octomics
 permalink: /energy/in/economies/
 ---
 
-# Energy In - Economies
+## Energy In - Economies
 
-## How other economies can be used as a source of inbound energy.
+**How other economies can be used as a source of inbound energy.**
 
 ### Unity Verification Service (Nodes & Apps) Rewards:
 
