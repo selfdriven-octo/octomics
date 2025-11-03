@@ -35,5 +35,6 @@ There are two tokens, one for prototyping (model testing) and one that can be us
 - Supported by the [selfdriven Foundation](https://selfdriven.foundation)
 
 ### Roadmap
+- [Research](/research/)
 - Implement using OctoProtos with use-case partners.
 - Build the [octochain Kit](/octochain/kit/)

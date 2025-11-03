@@ -1,6 +1,6 @@
 ---
 layout: default
-title: octochain Kiy - octomics
+title: octochain Kit - octomics
 permalink: /octochain/kit/
 ---
 
@@ -13,7 +13,7 @@ Works with the [selfdriven Network Infra Interface](https://www.selfdriven.netwo
 
 ### Resources
 - [Kits Code](https://github.com/selfdriven-octo/octomics/tree/main/docs/kits)
-- [Rsearch](/octochain/research)
+- [Research](/octochain/research)
 
 ### Use Examples
 - MAV100 Student Run Chain
