@@ -15,6 +15,7 @@ Activity, Growth, Verification, Pools, Exchanges, Cardano & Useful Resources... 
 - Verified achievements using the selfdrivenOS and apps like Level Up.
 - Uses the selfdriven-initiated skillzeb Templates standard.
 - Octos, or OctoProtos if prototyping, are issued based on verification be trusted learning partners.
+- KERI-based representation of work and activity that underpins social and societal trust.
 
 ### Useful Resources
 - Octos can be exchanged using Community Exchanges (permissed by SSI DIDs/VCs) for useful resources.
