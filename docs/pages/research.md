@@ -9,5 +9,5 @@ permalink: /research/
 - [Energy In - Economies](/energy/in/economies/)
 - [Proofs of Growth - In-organic Intelligence (GenAI) - Conversations](/proofs/growth/ii/conversations/)
 - [Energy Within - Games](/energy/within/games/)
-- [octochain Kit](/octochain/kit/)
+- [octochain Kit](https://octochain.newtwork/kit)
 
