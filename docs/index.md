@@ -30,7 +30,6 @@ There are two tokens, one for prototyping (model testing) and one that can be us
 
 ### Resources
 - [selfdriven.fyi/octomics](https://selfdriven.fyi/octomics)
-- [docs.selfdriven.foundation/octomics](https://docs.selfdriven.foundation/octomics)
 
 ### About
 - Supported by the [selfdriven Foundation](https://selfdriven.foundation)
