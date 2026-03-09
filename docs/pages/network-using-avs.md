@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: selfdriven
 title: Network Using AVS - octomics
 permalink: /network-using-avs/
 ---

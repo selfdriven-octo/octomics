@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: selfdriven
 title: octochain Kiy - octomics
 permalink: /octochain/research/
 ---

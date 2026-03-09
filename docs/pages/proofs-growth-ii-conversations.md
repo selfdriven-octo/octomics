@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: selfdriven
 title: Conversations - Inorganic Intelligence - Growth - Proofs - octomics
 permalink: /proofs/growth/ii/conversations/
 ---

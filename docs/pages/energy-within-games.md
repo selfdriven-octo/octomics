@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: selfdriven
 title: Games - Energy Within - octomics
 permalink: /energy/within/games/
 ---

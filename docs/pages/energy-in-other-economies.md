@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: selfdriven
 title: Economies - Energy In - octomics
 permalink: /energy/in/economies/
 ---

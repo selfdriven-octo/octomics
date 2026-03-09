@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: selfdriven
 title: octochain Kit - octomics
 permalink: /octochain/kit/
 ---
