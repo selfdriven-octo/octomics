@@ -1,0 +1,708 @@
+---
+layout: null
+permalink: "/coasean-singularity/"
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<link rel="shortcut icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 736 728'%3E%3Ccircle cx='368' cy='366' r='363' fill='%2393dd3d'/%3E%3Cpolygon points='184,295 317,162 317,295 184,428' fill='%23efefe5'/%3E%3Cpolygon points='185,528 453,260 453,395 320,527' fill='%23efefe5'/%3E%3Cpolygon points='424,527 555,397 555,527' fill='%23efefe5'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 736 728'%3E%3Ccircle cx='368' cy='366' r='363' fill='%2393dd3d'/%3E%3Cpolygon points='184,295 317,162 317,295 184,428' fill='%23efefe5'/%3E%3Cpolygon points='185,528 453,260 453,395 320,527' fill='%23efefe5'/%3E%3Cpolygon points='424,527 555,397 555,527' fill='%23efefe5'/%3E%3C/svg%3E">
+<title>The Coasean Singularity — Octomics field note</title>
+<meta name="description" content="An NBER working paper argues AI agents will collapse the transaction costs that shape firms and markets. Read through Octomics: when transacting is cheap, identity, delegation and verified contribution are what stay scarce.">
+<meta property="og:title" content="Cheap to transact. Costly to fake. — The Coasean Singularity, read through Octomics">
+<meta property="og:description" content="AI agents make transacting cheap. They don't make trusting cheap. Octomics is built on what stays scarce.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://octomics.io/coasean-singularity/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#09090f; --surface:#111118; --surface2:#18181f;
+  --border:rgba(255,255,255,0.08); --border2:rgba(255,255,255,0.14);
+  --text:#f0eeff; --muted:#7e7a9a; --muted2:#3d3a55;
+
+  --curious:#f5c842; --caring:#ff5f7e; --constructive:#00e5a0;
+  --chill:#7b6cff; --chill-bright:#9b8fff;
+  --curious-dim:rgba(245,200,66,0.13); --caring-dim:rgba(255,95,126,0.13);
+  --constructive-dim:rgba(0,229,160,0.13); --chill-dim:rgba(123,108,255,0.13);
+
+  /* framework accent — ties octomics.io to octonomous.io & heyocto.ai */
+  --octo:#93dd3d; --octo-dim:rgba(147,221,61,0.13); --octo-glow:rgba(147,221,61,0.30);
+  --pill:999px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth; background:#09090f !important; background-image:linear-gradient(#09090f,#09090f) !important; scroll-padding-top:90px}
+body{
+  background:#09090f !important; background-image:linear-gradient(#09090f,#09090f) !important; color:var(--text);
+  font-family:'DM Sans',sans-serif; line-height:1.6; overflow-x:hidden; cursor:none; -webkit-font-smoothing:antialiased;
+}
+a{cursor:none; color:inherit; text-decoration:none}
+::selection{background:var(--octo); color:#06150a}
+
+/* cursor */
+.cursor-dot{position:fixed;top:0;left:0;width:8px;height:8px;border-radius:50%;background:var(--octo);pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .12s ease,background .2s}
+.cursor-ring{position:fixed;top:0;left:0;width:34px;height:34px;border-radius:50%;border:1.5px solid rgba(240,238,255,.3);pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform .18s ease,width .2s,height .2s,border-color .2s}
+@media (hover:none){body{cursor:auto} a{cursor:auto} .cursor-dot,.cursor-ring{display:none}}
+
+/* reading progress */
+.progress{position:fixed; top:0; left:0; height:3px; width:0%; z-index:1100; background:linear-gradient(90deg,var(--curious),var(--caring),var(--constructive),var(--chill)); transition:width .1s linear}
+
+/* nav */
+nav{position:fixed; top:0; left:0; right:0; z-index:1000; display:flex; align-items:center; justify-content:space-between; padding:16px 30px; background:rgba(9,9,15,.72); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); border-bottom:1px solid var(--border)}
+.brand{display:flex; align-items:center; gap:11px; font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:19px; letter-spacing:-.03em}
+.brand .mark{width:26px;height:26px;flex:none;display:grid;place-items:center}
+.brand .mark svg{width:26px;height:26px}
+.brand em{font-style:normal; color:var(--octo)}
+.nav-links{display:flex; align-items:center; gap:26px}
+.nav-links a{font-size:14px; color:var(--muted); font-weight:500; transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{font-family:'Bricolage Grotesque',sans-serif; font-weight:600; font-size:14px; padding:9px 18px; border-radius:var(--pill); background:var(--octo-dim); color:var(--octo) !important; border:1.5px solid rgba(147,221,61,.30); transition:transform .2s,box-shadow .2s}
+.nav-cta:hover{transform:translateY(-3px); box-shadow:0 12px 30px rgba(147,221,61,.18)}
+.nav-cta svg{width:13px;height:13px;vertical-align:-1px}
+@media(max-width:860px){.nav-links a:not(.nav-cta){display:none}}
+@media(max-width:420px){nav{padding:14px 16px}}
+
+/* hero */
+.p-hero{padding:150px 0 60px; position:relative; overflow:hidden}
+.gblob{position:absolute; border-radius:50%; filter:blur(100px); opacity:.4; z-index:0}
+.gb1{width:420px;height:420px;background:var(--constructive);top:-140px;left:-120px}
+.gb2{width:360px;height:360px;background:var(--curious);top:-80px;right:-100px;opacity:.3}
+.gb3{width:300px;height:300px;background:var(--octo);top:60px;left:38%;opacity:.26}
+.p-hero-in{max-width:1120px; margin:0 auto; padding:0 30px; display:grid; grid-template-columns:220px 1fr; gap:56px; position:relative; z-index:2}
+.p-hero-copy{grid-column:2; min-width:0}
+.doc-eyebrow{font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.22em; text-transform:uppercase; color:var(--constructive); display:inline-flex; align-items:center; gap:9px; margin-bottom:26px}
+.doc-eyebrow::before{content:''; width:26px; height:1px; background:var(--constructive); opacity:.7}
+.p-hero h1{font-family:'Bricolage Grotesque',sans-serif; font-weight:800; letter-spacing:-.045em; line-height:1.02; font-size:clamp(36px,6.4vw,64px)}
+.p-hero h1 .g{background:linear-gradient(105deg,var(--octo),var(--constructive)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent}
+.p-hero .sub{color:var(--muted); font-size:clamp(17px,2.2vw,20px); margin-top:22px; max-width:640px}
+.p-hero .sub em{font-style:italic; color:var(--text)}
+.doc-meta{display:flex; flex-wrap:wrap; gap:10px; margin-top:30px}
+.doc-meta span{font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.06em; color:var(--muted); padding:7px 14px; border:1px solid var(--border); border-radius:var(--pill); background:var(--surface)}
+.doc-meta span b{color:var(--text); font-weight:500}
+
+/* layout */
+.layout{max-width:1120px; margin:0 auto; padding:40px 30px 40px; display:grid; grid-template-columns:220px 1fr; gap:56px; position:relative; z-index:1}
+.toc{position:sticky; top:100px; align-self:start; height:max-content}
+.toc .toc-label{font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--muted2); margin-bottom:16px}
+.toc ol{list-style:none; counter-reset:toc; display:flex; flex-direction:column; gap:2px}
+.toc li{counter-increment:toc}
+.toc a{display:flex; gap:11px; align-items:baseline; padding:7px 0; font-size:13.5px; color:var(--muted); border-left:2px solid transparent; padding-left:14px; margin-left:-16px; transition:color .2s,border-color .2s}
+.toc a::before{content:counter(toc,decimal-leading-zero); font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--muted2); flex:none}
+.toc a:hover{color:var(--text)}
+.toc a.active{color:var(--octo); border-color:var(--octo)}
+.toc a.active::before{color:var(--octo)}
+@media(max-width:900px){.layout{grid-template-columns:1fr; gap:0} .toc{display:none} .p-hero-in{grid-template-columns:1fr} .p-hero-copy{grid-column:1}}
+@media(max-width:420px){.layout,.p-hero-in{padding-left:16px; padding-right:16px}}
+
+/* article / prose */
+article{max-width:680px; min-width:0}
+.sec{padding:44px 0; border-top:1px solid var(--border)}
+.sec:first-child{border-top:none; padding-top:8px}
+.sec .kicker{font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-bottom:14px}
+.sec h2{font-family:'Bricolage Grotesque',sans-serif; font-weight:800; letter-spacing:-.035em; line-height:1.08; font-size:clamp(26px,4vw,38px); margin-bottom:22px}
+.sec h3{font-family:'Bricolage Grotesque',sans-serif; font-weight:700; letter-spacing:-.02em; font-size:21px; margin:30px 0 10px}
+article p{color:#c9c5df; font-size:17.5px; line-height:1.72; margin-bottom:18px}
+article p.lead{font-size:20px; color:var(--text)}
+article strong{color:var(--text); font-weight:600}
+article em{font-style:italic; color:var(--text)}
+article p a{color:var(--text); border-bottom:1px solid rgba(147,221,61,.35); transition:color .2s,border-color .2s}
+article p a:hover{color:var(--octo); border-color:var(--octo)}
+.cap{font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin:-8px 0 24px; line-height:1.6}
+
+/* pull quote */
+.pull{margin:38px 0; padding:6px 0 6px 28px; border-left:3px solid var(--octo); font-family:'Bricolage Grotesque',sans-serif; font-weight:700; letter-spacing:-.02em; font-size:clamp(22px,3.4vw,30px); line-height:1.22; color:var(--text)}
+.pull .hl{color:var(--octo)}
+
+/* source card */
+.srcbox{display:grid; grid-template-columns:auto 1fr; gap:16px; align-items:start; background:var(--surface); border:1px solid rgba(0,229,160,.32); border-radius:18px; padding:20px 22px; margin:6px 0 26px}
+.srcbox .si{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--constructive-dim);color:var(--constructive);flex:none}
+.srcbox .si svg{width:21px;height:21px}
+.srcbox .sl{font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--constructive); margin-bottom:6px}
+.srcbox h3{font-family:'Bricolage Grotesque',sans-serif; font-weight:700; font-size:17px; letter-spacing:-.01em; margin:0 0 4px}
+.srcbox p{font-size:14px; color:var(--muted); margin:0; line-height:1.55}
+.srcbox a{color:var(--text); border-bottom:1px solid var(--border2); overflow-wrap:anywhere} .srcbox a:hover{color:var(--octo); border-color:var(--octo)}
+
+/* not / but */
+.notbut{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:22px 0}
+.notbut .box{background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:20px 22px}
+.notbut .box.hi{border-color:rgba(147,221,61,.32); background:linear-gradient(180deg,rgba(147,221,61,.05),var(--surface))}
+.notbut .bl{font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-bottom:10px}
+.notbut .box.hi .bl{color:var(--octo)}
+.notbut .bt{font-family:'Bricolage Grotesque',sans-serif; font-weight:700; font-size:18px; letter-spacing:-.01em; line-height:1.3}
+.notbut .box.hi .bt{color:var(--text)} .notbut .box:not(.hi) .bt{color:var(--muted)}
+@media(max-width:560px){.notbut{grid-template-columns:1fr}}
+
+/* horizontal step strip */
+.strip{display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin:22px 0; font-family:'JetBrains Mono',monospace; font-size:12.5px}
+.strip span{padding:8px 14px; border-radius:var(--pill); background:var(--surface2); border:1px solid var(--border); color:var(--text)}
+.strip i{color:var(--muted2); font-style:normal}
+.strip span.hi{color:var(--octo); border-color:rgba(147,221,61,.45); background:var(--octo-dim)}
+.strip span.gr{color:var(--constructive); border-color:rgba(0,229,160,.45); background:var(--constructive-dim)}
+.strip span.am{color:var(--curious); border-color:rgba(245,200,66,.45); background:var(--curious-dim)}
+
+/* scarcity matrix */
+.cx{margin:22px 0; border:1px solid var(--border); border-radius:16px; overflow:hidden; background:var(--surface)}
+.cx .r{display:grid; grid-template-columns:1fr 1.35fr 1.3fr 1.15fr; gap:14px; padding:14px 20px; border-bottom:1px solid var(--border); align-items:baseline}
+.cx .r:last-child{border-bottom:none}
+.cx .r.h{font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); padding:12px 20px}
+.cx .r.h .ok{color:var(--octo)}
+.cx .r b{font-family:'Bricolage Grotesque',sans-serif; font-weight:700; font-size:15.5px; letter-spacing:-.01em; color:var(--text)}
+.cx .r span{font-size:14px; color:var(--muted); line-height:1.5}
+.cx .r span.q{color:var(--text)}
+.cx .r span.o{font-family:'JetBrains Mono',monospace; font-size:12.5px; color:var(--octo)}
+@media(max-width:640px){
+  .cx .r{grid-template-columns:1fr; gap:8px}
+  .cx .r.h{display:none}
+  .cx .r span[data-l]::before{content:attr(data-l); display:block; font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted2); margin-bottom:2px}
+}
+
+/* 4Cs blocks */
+.cc{border:1px solid var(--border); border-left-width:3px; border-radius:16px; background:var(--surface); padding:24px 24px; margin:16px 0}
+.cc .top{display:flex; align-items:center; gap:14px; margin-bottom:14px}
+.cc .ico{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;flex:none}
+.cc .ico svg{width:22px;height:22px}
+.cc h3{margin:0; font-size:24px}
+.cc .es{font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:.08em; margin-top:2px}
+.cc p{font-size:16px; margin-bottom:0; color:#c3bfda}
+.cc-c{border-left-color:var(--curious)} .cc-c .ico{background:var(--curious-dim);color:var(--curious)} .cc-c h3,.cc-c .es{color:var(--curious)}
+.cc-k{border-left-color:var(--caring)} .cc-k .ico{background:var(--caring-dim);color:var(--caring)} .cc-k h3,.cc-k .es{color:var(--caring)}
+.cc-b{border-left-color:var(--constructive)} .cc-b .ico{background:var(--constructive-dim);color:var(--constructive)} .cc-b h3,.cc-b .es{color:var(--constructive)}
+.cc-l{border-left-color:var(--chill)} .cc-l .ico{background:var(--chill-dim);color:var(--chill-bright)} .cc-l h3,.cc-l .es{color:var(--chill-bright)}
+
+/* ownership grid */
+.own{display:grid; grid-template-columns:118px 1fr 1fr; gap:10px; margin:24px 0}
+.own .hd{font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); align-self:end; padding:0 4px 2px}
+.own .rh{font-family:'Bricolage Grotesque',sans-serif; font-weight:700; font-size:15px; letter-spacing:-.01em; color:var(--text); align-self:center; line-height:1.25}
+.own .rh small{display:block; font-family:'JetBrains Mono',monospace; font-weight:400; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-top:4px}
+.own .cell{background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:17px 18px}
+.own .cell .ct{font-family:'Bricolage Grotesque',sans-serif; font-weight:700; font-size:16px; letter-spacing:-.01em; margin-bottom:6px; color:var(--text)}
+.own .cell p{font-size:13.5px; color:var(--muted); line-height:1.5; margin:0}
+.own .cell.hi{border-color:rgba(147,221,61,.45); background:linear-gradient(180deg,rgba(147,221,61,.08),var(--surface))}
+.own .cell.hi .ct{color:var(--octo)}
+.own .cell .tag{display:inline-block; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.12em; text-transform:uppercase; padding:3px 9px; border-radius:var(--pill); background:var(--octo-dim); color:var(--octo); margin-top:10px}
+.own .cell.lo .ct{color:var(--muted)}
+@media(max-width:600px){
+  .own{grid-template-columns:1fr 1fr}
+  .own .hd.corner{display:none}
+  .own .rh{grid-column:1/-1; margin-top:8px}
+}
+@media(max-width:420px){
+  .own{grid-template-columns:1fr}
+  .own .hd{display:none}
+  .own .cell[data-l]::before{content:attr(data-l); display:block; font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted2); margin-bottom:6px}
+}
+
+/* identity chain */
+.chain{display:flex; flex-direction:column; align-items:center; margin:26px 0 22px}
+.chain .n{font-family:'JetBrains Mono',monospace; font-size:13px; letter-spacing:.03em; color:var(--text); background:var(--surface); border:1px solid var(--border2); border-radius:14px; padding:10px 18px; text-align:center; width:min(100%,340px)}
+.chain .n small{display:block; font-family:'DM Sans',sans-serif; font-size:12.5px; letter-spacing:0; color:var(--muted); margin-top:3px; line-height:1.4}
+.chain .n.am{border-color:rgba(245,200,66,.45); color:var(--curious); background:var(--curious-dim)}
+.chain .n.rd{border-color:rgba(255,95,126,.45); color:var(--caring); background:var(--caring-dim)}
+.chain .n.gr{border-color:rgba(0,229,160,.45); color:var(--constructive); background:var(--constructive-dim)}
+.chain .n.hi{border-color:rgba(147,221,61,.5); color:var(--octo); background:var(--octo-dim)}
+.chain .pair{display:grid; grid-template-columns:1fr 1fr; gap:10px; width:min(100%,520px)}
+.chain .pair .n{width:auto}
+.chain .a{width:1px; height:14px; background:var(--muted2); position:relative}
+.chain .lbl{font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted)}
+@media(max-width:420px){.chain .pair{grid-template-columns:1fr}}
+
+/* stack mini */
+.stack{display:flex; flex-direction:column; gap:10px; margin:26px 0}
+.layer{display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:18px; background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:18px 22px; transition:transform .3s}
+a.layer:hover{transform:translateX(6px)}
+.layer .ln{font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:19px; letter-spacing:-.02em}
+.layer .lq{color:var(--muted); font-size:14px}
+.layer .lq b{color:var(--text); font-weight:500}
+.layer .lt{font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:.08em; padding:5px 12px; border-radius:var(--pill); white-space:nowrap}
+.l-intent{border-color:rgba(245,200,66,.3)} .l-intent .ln{color:var(--curious)} .l-intent .lt{background:var(--curious-dim);color:var(--curious)}
+.l-being{border-color:rgba(255,95,126,.28)} .l-being .ln{color:var(--caring)} .l-being .lt{background:var(--caring-dim);color:var(--caring)}
+.l-impact{border-color:rgba(147,221,61,.36); background:linear-gradient(180deg,rgba(147,221,61,.06),var(--surface))} .l-impact .ln{color:var(--octo)} .l-impact .lt{background:var(--octo-dim);color:var(--octo)}
+.flow{text-align:center; font-family:'Bricolage Grotesque',sans-serif; font-weight:700; font-size:20px; letter-spacing:-.02em; margin-top:6px}
+.flow .a{color:var(--muted2); margin:0 8px} .flow .w{color:var(--curious)} .flow .h{color:var(--caring)} .flow .i{color:var(--octo)}
+@media(max-width:560px){.layer{grid-template-columns:1fr; gap:8px} .layer .lt{justify-self:start}}
+
+/* definitions */
+.defs{display:flex; flex-direction:column; margin:22px 0 10px; border:1px solid var(--border); border-radius:16px; background:var(--surface); overflow:hidden}
+.def{display:grid; grid-template-columns:150px 1fr; gap:18px; padding:18px 20px; border-bottom:1px solid var(--border); align-items:baseline}
+.def:last-child{border-bottom:none}
+.def dt{font-family:'Bricolage Grotesque',sans-serif; font-weight:700; font-size:17px; color:var(--text); letter-spacing:-.01em}
+.def dd{color:#c3bfda; font-size:15px; line-height:1.6}
+.def dd .oc{display:block; margin-top:8px; font-size:14.5px; color:var(--text)}
+.def dd .oc::before{content:'Octomics → '; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.08em; color:var(--octo)}
+@media(max-width:560px){.def{grid-template-columns:1fr; gap:6px}}
+
+/* have / lack */
+.twin{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:24px 0 6px}
+.twin .box{background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:22px 22px}
+.twin .box.hi{border-color:rgba(147,221,61,.28)}
+.twin .box .bl{font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin-bottom:14px}
+.twin .box.hi .bl{color:var(--octo)}
+.twin ul{list-style:none; display:flex; flex-direction:column; gap:10px}
+.twin li{font-size:15px; color:var(--muted); display:flex; gap:10px; align-items:flex-start; line-height:1.45}
+.twin .box.hi li{color:var(--text); font-weight:500}
+.twin li svg{width:15px;height:15px;flex:none;margin-top:3px}
+.twin .box.hi li svg{color:var(--octo)}
+@media(max-width:560px){.twin{grid-template-columns:1fr}}
+
+/* closing 4C */
+.fourC{display:flex; flex-wrap:wrap; gap:16px; margin:26px 0 4px}
+.fourC span{font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:clamp(20px,3vw,30px); letter-spacing:-.03em}
+.fourC .c1{color:var(--curious)} .fourC .c2{color:var(--caring)} .fourC .c3{color:var(--constructive)} .fourC .c4{color:var(--chill-bright)}
+
+/* end cta */
+.endcta{margin:20px 0 0; padding:34px 30px; border:1px solid rgba(147,221,61,.28); border-radius:22px; background:radial-gradient(120% 120% at 0% 0%,rgba(147,221,61,.10),transparent 55%),var(--surface); text-align:center}
+.endcta h3{font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:24px; letter-spacing:-.02em; margin:0 0 18px}
+.endcta .row{display:flex; flex-wrap:wrap; gap:12px; justify-content:center}
+.btn{display:inline-flex; align-items:center; gap:8px; font-family:'Bricolage Grotesque',sans-serif; font-weight:600; font-size:15px; padding:12px 22px; border-radius:var(--pill); transition:transform .2s,box-shadow .2s}
+.btn svg{width:16px;height:16px}
+.btn-p{background:var(--octo); color:#06150a} .btn-p:hover{transform:translateY(-4px); box-shadow:0 16px 40px var(--octo-glow)}
+.btn-s{background:var(--surface2); color:var(--text); border:1px solid var(--border2)} .btn-s:hover{transform:translateY(-4px)}
+
+/* references */
+.refs{list-style:none; display:flex; flex-direction:column; gap:12px; margin:18px 0 6px}
+.refs li{font-size:14.5px; color:var(--muted); padding-left:18px; position:relative; line-height:1.55}
+.refs li::before{content:'—'; position:absolute; left:0; color:var(--muted2)}
+.refs li b{color:var(--text); font-weight:600}
+.refs li a{color:var(--octo); border-bottom:1px solid rgba(147,221,61,.3); overflow-wrap:anywhere}
+.repo-link{display:inline-flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:15px;padding:12px 20px;border-radius:var(--pill);background:var(--surface2);border:1px solid var(--border2);color:var(--text);transition:transform .2s,border-color .2s,color .2s}
+.repo-link:hover{transform:translateY(-3px);border-color:var(--octo);color:var(--octo)}
+.repo-link svg{width:18px;height:18px}
+
+/* footer */
+footer{border-top:1px solid var(--border); padding:56px 30px 46px; margin-top:30px}
+.foot-in{max-width:1120px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; gap:24px; flex-wrap:wrap}
+.foot-brand{display:flex; align-items:center; gap:11px; font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:19px; letter-spacing:-.03em}
+.foot-brand .mark svg{width:24px;height:24px}
+.foot-brand em{font-style:normal;color:var(--octo)}
+.foot-links{display:flex; gap:22px; flex-wrap:wrap}
+.foot-links a{color:var(--muted); font-size:14px; transition:color .2s}
+.foot-links a:hover{color:var(--octo)}
+.foot-cs{display:flex; gap:7px}
+.foot-cs i{width:11px;height:11px;border-radius:50%}
+.foot-cs .c1{background:var(--curious)} .foot-cs .c2{background:var(--caring)} .foot-cs .c3{background:var(--constructive)} .foot-cs .c4{background:var(--chill)}
+.foot-copy{max-width:1120px; margin:26px auto 0; color:var(--muted); font-size:13px}
+@media(max-width:420px){footer{padding:46px 16px 40px}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="ic-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="ic-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="ic-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+  <symbol id="ic-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="ic-github" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.575.106.785-.25.785-.556 0-.274-.01-1-.015-1.964-3.196.695-3.87-1.54-3.87-1.54-.523-1.33-1.278-1.684-1.278-1.684-1.044-.714.08-.7.08-.7 1.154.082 1.76 1.185 1.76 1.185 1.027 1.76 2.695 1.252 3.35.957.104-.744.402-1.252.73-1.54-2.552-.29-5.236-1.276-5.236-5.68 0-1.254.448-2.28 1.183-3.084-.118-.29-.513-1.46.113-3.043 0 0 .966-.31 3.166 1.178a11 11 0 0 1 2.882-.388c.978.004 1.963.132 2.883.388 2.198-1.489 3.163-1.178 3.163-1.178.627 1.583.232 2.753.114 3.043.737.804 1.182 1.83 1.182 3.084 0 4.415-2.688 5.387-5.248 5.671.413.356.78 1.057.78 2.13 0 1.538-.014 2.778-.014 3.157 0 .308.207.668.79.554A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z"/></symbol>
+  <symbol id="ic-scale" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M5 21h14"/><path d="M3 7h18"/><path d="m6 7-3 7a3 3 0 0 0 6 0z"/><path d="m18 7-3 7a3 3 0 0 0 6 0z"/></symbol>
+  <symbol id="ic-telescope" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="17" cy="13" r="3"/><path d="M3 7l5.5 2.5"/><path d="M3 7l2-4 14.5 6.5-2 4"/><path d="M8.5 9.5L6 20h5l1.5-4"/><path d="M17 16v4"/></symbol>
+  <symbol id="ic-heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></symbol>
+  <symbol id="ic-build" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/></symbol>
+  <symbol id="ic-pause" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></symbol>
+  <symbol id="sd-mark" viewBox="0 0 736 728"><circle cx="368" cy="366" r="363" fill="currentColor"/><polygon points="184,295 317,162 317,295 184,428" fill="#efefe5"/><polygon points="185,528 453,260 453,395 320,527" fill="#efefe5"/><polygon points="424,527 555,397 555,527" fill="#efefe5"/></symbol>
+</svg>
+
+<div class="cursor-dot" id="cdot"></div>
+<div class="cursor-ring" id="cring"></div>
+<div class="progress" id="progress"></div>
+
+<nav>
+  <a href="/" class="brand"><span class="mark"><svg style="color:var(--octo)"><use href="#sd-mark"/></svg></span><span class="wm">octo<em>mics</em></span></a>
+  <div class="nav-links">
+    <a href="#scarce">What stays scarce</a>
+    <a href="#ownership">Ownership</a>
+    <a href="#identity">Identity</a>
+    <a href="/research/">Research</a>
+    <a href="https://github.com/selfdriven-octo/octomics">GitHub</a>
+    <a href="/" class="nav-cta"><svg><use href="#ic-back"/></svg> octomics.io</a>
+  </div>
+</nav>
+
+<header class="p-hero">
+  <div class="gblob gb1"></div><div class="gblob gb2"></div><div class="gblob gb3"></div>
+  <div class="p-hero-in">
+    <div class="p-hero-copy">
+    <span class="doc-eyebrow">Field note · The Coasean Singularity</span>
+    <h1>Cheap to transact. <span class="g">Costly to fake.</span></h1>
+    <p class="sub">A new NBER working paper argues that AI agents will collapse the transaction costs Coase said shape firms and markets. Read through Octomics, the question becomes: when searching, negotiating and contracting are nearly free, <em>what is still worth verifying?</em></p>
+    <div class="doc-meta">
+      <span><b>Octomics</b> · field note</span>
+      <span>~18 min read</span>
+      <span>Builds on <b>NBER w34468</b></span>
+      <span>September 2026</span>
+    </div>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="toc">
+    <div class="toc-label">Contents</div>
+    <ol>
+      <li><a href="#abstract" class="tl">Abstract</a></li>
+      <li><a href="#coase" class="tl">The Coasean argument</a></li>
+      <li><a href="#scarce" class="tl">What stays scarce</a></li>
+      <li><a href="#demand" class="tl">Derived demand</a></li>
+      <li><a href="#faithful" class="tl">Capable, knowledgeable, faithful</a></li>
+      <li><a href="#ownership" class="tl">Who owns the agent</a></li>
+      <li><a href="#signals" class="tl">Signals and congestion</a></li>
+      <li><a href="#identity" class="tl">Identity is the design</a></li>
+      <li><a href="#designs" class="tl">Designs that were impractical</a></li>
+      <li><a href="#paying" class="tl">Paying for agents</a></li>
+      <li><a href="#regulation" class="tl">Responsibility</a></li>
+      <li><a href="#honest" class="tl">What this doesn't solve</a></li>
+      <li><a href="#conclusion" class="tl">Conclusion</a></li>
+      <li><a href="#references" class="tl">References</a></li>
+    </ol>
+  </aside>
+
+  <article>
+
+    <!-- Abstract -->
+    <section class="sec" id="abstract">
+      <div class="kicker">Abstract</div>
+      <p class="lead">AI agents are about to make the ordinary costs of using a market — finding, comparing, negotiating, contracting, checking — close to free. A new NBER working paper asks what that does to demand, supply and market design. Octomics asks a narrower question: when transacting is cheap, what is left that is still worth verifying?</p>
+
+      <div class="srcbox">
+        <span class="si"><svg><use href="#ic-scale"/></svg></span>
+        <div>
+          <div class="sl">Source research</div>
+          <h3>The Coasean Singularity? Demand, Supply, and Market Design with AI Agents</h3>
+          <p>Shahidi, Rusak, Manning, Fradkin &amp; Horton · NBER Working Paper 34468 · November 2025 · <a href="https://www.nber.org/papers/w34468">nber.org/papers/w34468</a></p>
+        </div>
+      </div>
+
+      <p>The paper treats agents as market participants in their own right — software that searches, negotiates and transacts for a human principal. It works through why people will want agents, how agents get designed and supplied, what happens to existing markets when they arrive, and which market designs become feasible once preferences, commitments and identity are cheap to handle. Its conclusion is careful: the efficiency gains are large, but so are the new frictions — congestion, obfuscation, lock-in — and whether the net effect on welfare is positive remains an empirical question.</p>
+      <p>Octomics is the contribution layer of the Octonomous stack. Activity and growth are verified by trusted partners, anchored with KERI, represented as <strong>Octos</strong>, and exchanged for useful resources through Community Exchanges permissioned by SSI DIDs and verifiable credentials. Read against the paper, it is a bet on one of its quieter implications: as the cost of acting falls toward zero, value moves to what agents cannot cheaply produce — a real identity, a checkable mandate, and proof that something was actually done.</p>
+
+      <div class="notbut">
+        <div class="box"><div class="bl">Agents make cheap</div><div class="bt">Search · negotiation · contracting · monitoring · applications · content</div></div>
+        <div class="box hi"><div class="bl">Octomics keeps costly to fake</div><div class="bt">Identity · delegation · verification · reputation · contribution</div></div>
+      </div>
+
+      <p>The short version: the Coasean singularity makes transacting cheap. It does not make <strong>trusting</strong> cheap.</p>
+    </section>
+
+    <!-- 01 coase -->
+    <section class="sec" id="coase">
+      <div class="kicker">01 — The Coasean argument</div>
+      <h2>Why firms exist, and what happens when the reason goes away</h2>
+      <p>In 1937 Ronald Coase asked why, if markets allocate so well, so much economic activity happens inside firms. His answer was transaction costs. Using a market is not free: you have to discover prices, find counterparties, negotiate, write contracts and check they are kept. Where those costs are high, it is cheaper to bring the work in-house and coordinate by instruction instead of by price.</p>
+      <p>The paper's observation is that this list reads like a job description for an AI agent. Learning prices, negotiating terms, drafting contracts and monitoring compliance are exactly the tasks agents can do at very low marginal cost. If they do them well, the line between what an organisation makes and what it buys moves — and some of what firms exist to coordinate can be coordinated directly.</p>
+      <p>The authors expect this to arrive by two routes. Existing markets will adapt in stages: agents first assist people, then take over whole tasks, then work gets reorganised around what agents can do. New markets will skip the stages and be designed agent-first from the start.</p>
+
+      <div class="strip">
+        <span>Augment</span><i>→</i><span>Substitute</span><i>→</i><span>Reorganise</span><i>·</i><span class="gr">Agent-first: start at the end</span>
+      </div>
+
+      <p>Octomics belongs to the second kind. It was not a human market that later let agents in; it is a contribution loop designed for a stack in which self-sovereign beings act on community intent. That makes the paper's question practical for us. If coordination no longer needs a firm to hold it together, something still has to hold the trust the firm used to hold.</p>
+      <div class="pull">Coase explained firms by the cost of transacting. <span class="hl">Octomics starts where that cost runs out.</span></div>
+    </section>
+
+    <!-- 02 scarce -->
+    <section class="sec" id="scarce">
+      <div class="kicker">02 — What stays scarce</div>
+      <h2>Cheap to transact is not cheap to trust</h2>
+      <p>Every transaction cost the paper lists has two parts: the effort, and the trust. Agents compress the effort dramatically — they search in parallel, negotiate without impatience and monitor without getting bored. The trust part is different. It asks questions an agent cannot answer by working harder.</p>
+
+      <div class="cx" role="table" aria-label="Transaction costs: what agents make cheap, what stays scarce, and the Octomics primitive">
+        <div class="r h" role="row"><span role="columnheader">Transaction cost</span><span role="columnheader">Agents make it cheap</span><span role="columnheader">What stays scarce</span><span role="columnheader" class="ok">Octomics primitive</span></div>
+        <div class="r" role="row"><b role="cell">Search &amp; discovery</b><span role="cell" data-l="Agents make it cheap">Every option compared in parallel, with no opportunity cost to the agent's time</span><span role="cell" class="q" data-l="What stays scarce">Is this counterparty real — and a single party?</span><span role="cell" class="o" data-l="Octomics primitive">KERI-anchored identity · SSI DIDs</span></div>
+        <div class="r" role="row"><b role="cell">Negotiation</b><span role="cell" data-l="Agents make it cheap">Many concurrent negotiations, started early and held open as long as compute allows</span><span role="cell" class="q" data-l="What stays scarce">Is this agent acting for who it claims, within what mandate?</span><span role="cell" class="o" data-l="Octomics primitive">Delegated identifiers · ACDC mandates</span></div>
+        <div class="r" role="row"><b role="cell">Contracting</b><span role="cell" data-l="Agents make it cheap">Terms drafted and agreed in seconds</span><span role="cell" class="q" data-l="What stays scarce">Can anyone check the commitment later?</span><span role="cell" class="o" data-l="Octomics primitive">Signed, anchored key events</span></div>
+        <div class="r" role="row"><b role="cell">Monitoring</b><span role="cell" data-l="Agents make it cheap">Continuous follow-through at near-zero marginal cost</span><span role="cell" class="q" data-l="What stays scarce">Did the work actually happen, and was it any good?</span><span role="cell" class="o" data-l="Octomics primitive">Partner verification · skillzeb Templates</span></div>
+        <div class="r" role="row"><b role="cell">Reputation</b><span role="cell" data-l="Agents make it cheap">Every review read and cross-referenced</span><span role="cell" class="q" data-l="What stays scarce">Whose record is this, and does it move with them?</span><span role="cell" class="o" data-l="Octomics primitive">Octos — portable verified contribution</span></div>
+      </div>
+      <p class="cap">Transaction costs after Coase (1937) and the paper's §1 · right-hand column: Octomics</p>
+
+      <p>The right-hand column is not something Octomics invented for agents; it is what Octomics already runs on. The paper reaches the same place from the other direction. Its market-design section argues that identity verification, verified credentials and reputation — combined — are what make agent-mediated markets workable, and that together they open up targeted deals and small negotiations that used to cost more to arrange than they were worth.</p>
+      <div class="pull">Agents collapse the cost of effort. <span class="hl">Verification is what's left to price.</span></div>
+    </section>
+
+    <!-- 03 demand -->
+    <section class="sec" id="demand">
+      <div class="kicker">03 — Derived demand</div>
+      <h2>Nobody wants the agent. They want the outcome.</h2>
+      <p>The paper makes a point economists will recognise and product teams often forget: demand for agents is <strong>derived demand</strong>. Nobody enjoys watching software compile a list of prices; they want what the list helps them get. People will deploy agents for one of two reasons — to decide better than they would on their own, or to decide about as well (occasionally a little worse) for far less effort.</p>
+      <p>The same logic applies to contribution. If effort can be generated at near-zero cost, effort stops being evidence of anything. An agent can produce a thousand pages, a hundred applications or a week of busy activity without anyone growing or anything being built. What a community actually wants is the outcome: a skill demonstrated, a problem solved, a resource made useful.</p>
+
+      <div class="notbut">
+        <div class="box"><div class="bl">Measured as effort</div><div class="bt">Hours, tokens, pages, messages — all nearly free for an agent</div></div>
+        <div class="box hi"><div class="bl">Measured as contribution</div><div class="bt">A verified outcome, attested by a partner, anchored to an identity</div></div>
+      </div>
+
+      <p>That is why the Octomics flow puts verification between activity and Octos. Activity is the input. Verification by a trusted partner — structured against a skillzeb Template, so an achievement has a shared, checkable shape — is what turns it into contribution. Octos represent the outcome, not the effort spent reaching it.</p>
+      <div class="strip"><span>Activity</span><i>→</i><span class="gr">Verification</span><i>→</i><span class="hi">Octos</span><i>→</i><span>Useful resources</span></div>
+      <p>The paper also describes an advisory mode, where the agent doesn't act for you but helps you decide or improve — it cites evidence that writing assistance on job applications raised hiring. Octomics' research on <a href="/proofs/growth/ii/conversations/">Proofs of Growth in conversations with in-organic intelligence</a> takes that case seriously: when growth happens in dialogue with an agent, a cryptographic Proof of Reflection records the engagement so a partner has something real to verify.</p>
+      <p>Finally, the paper predicts where agents gain traction first: markets that already use human agents or large matching platforms — job search, real estate, freelance hiring — and especially those with experience asymmetries, where one side transacts rarely and the other every day. Learning and skills sit in that space. A person proves their growth a handful of times in a life; employers and institutions weigh such claims daily. Verified contribution narrows that gap.</p>
+    </section>
+
+    <!-- 04 faithful -->
+    <section class="sec" id="faithful">
+      <div class="kicker">04 — Capable, knowledgeable, faithful</div>
+      <h2>What principals want from an agent is character</h2>
+      <p>According to the paper, people will want from AI agents what they want from human ones: enough capability to act on their preferences, knowledge of what those preferences are, and the faithfulness to act on them in the principal's interest. The design problem splits the same way. Preferences have to be elicited — hard, because principals can't fully state them and agents can misread or hallucinate what they're told. They have to be honoured. And the agent needs what the authors call <strong>meta-rationality</strong>: knowing when to act on its own and when to defer.</p>
+      <p>Octonomous names these as character rather than capability. The 4Cs line up with the paper's list closely:</p>
+
+      <div class="cc cc-c">
+        <div class="top"><span class="ico"><svg><use href="#ic-telescope"/></svg></span><div><h3>Curious</h3><div class="es">Knowledgeable · preference elicitation</div></div></div>
+        <p>Asks before it assumes. The paper notes that preference complexity varies enormously — selling a house is mostly a trade-off between price and speed, buying one involves dozens of factors — and that errors compound as dimensions grow. A curious being treats a stated preference as a starting point, and surfaces what went unsaid, like the paper's home-buying assistant that notices a buyer keeps choosing houses near parks.</p>
+      </div>
+      <div class="cc cc-k">
+        <div class="top"><span class="ico"><svg><use href="#ic-heart"/></svg></span><div><h3>Caring</h3><div class="es">Faithful · alignment</div></div></div>
+        <p>Acts in the principal's interest and counts the cost to everyone else. An agent that quietly steers toward whoever operates or pays for it can be both capable and knowledgeable, and still not be faithful. Caring is the property that fails first under that pressure.</p>
+      </div>
+      <div class="cc cc-b">
+        <div class="top"><span class="ico"><svg><use href="#ic-build"/></svg></span><div><h3>Constructive</h3><div class="es">Capable · owns the outcome</div></div></div>
+        <p>Does the work, and signs it. Capability that leaves a verifiable record under a real identity is the kind Octomics can recognise as contribution; capability that leaves no trace is indistinguishable from noise.</p>
+      </div>
+      <div class="cc cc-l">
+        <div class="top"><span class="ico"><svg><use href="#ic-pause"/></svg></span><div><h3>Chill</h3><div class="es">Meta-rational · knows when to defer</div></div></div>
+        <p>The paper's hardest design question — when to act autonomously and when to hand the decision back — is the one Chill answers by default. Below the bar, the most autonomous thing a being can do is decline to act. Chill is also what keeps a being steady under the adversarial pressure the paper expects to grow as more decisions pass through agents.</p>
+      </div>
+
+      <p>On robustness the paper asks for agents that resist manipulation of their decision rules. That is the argument of the Octonomous field note on <a href="https://octonomous.io/character-as-containment">character as containment</a>: character has to travel with the being, not be applied by whichever platform it happens to run on.</p>
+    </section>
+
+    <!-- 05 ownership -->
+    <section class="sec" id="ownership">
+      <div class="kicker">05 — Who owns the agent</div>
+      <h2>Bring-your-own beings</h2>
+      <p>For builders, the paper's most useful frame is a two-by-two. One axis is ownership: a <strong>bring-your-own</strong> agent is controlled by the user and carried from site to site; a <strong>bowling-shoe</strong> agent is supplied by the platform hosting the transaction — convenient, deeply integrated, and yours only while you're in the building. The other axis is specialisation: horizontal generalists versus vertical specialists.</p>
+
+      <div class="own" aria-label="Ownership and specialisation of AI agents">
+        <div class="hd corner"></div>
+        <div class="hd">Horizontal</div>
+        <div class="hd">Vertical</div>
+
+        <div class="rh">Bring-your-own<small>user-controlled</small></div>
+        <div class="cell hi" data-l="Horizontal"><div class="ct">Portable generalist</div><p>Aligned with the user, private, can compare across platforms. Risks throttled access and thinner first-party data.</p><span class="tag">Octonomous beings sit here</span></div>
+        <div class="cell" data-l="Vertical"><div class="ct">Portable specialist</div><p>Stronger in one domain, still the user's. Has to track each platform's rules and APIs.</p></div>
+
+        <div class="rh">Bowling-shoe<small>platform-operated</small></div>
+        <div class="cell lo" data-l="Horizontal"><div class="ct">Platform generalist</div><p>Low friction, privileged tools. Steering, lock-in, hard to inspect.</p></div>
+        <div class="cell lo" data-l="Vertical"><div class="ct">Platform specialist</div><p>Best on its home platform. Most steering, least transparent, discourages switching.</p></div>
+      </div>
+      <p class="cap">Summarised from the paper's Table 2 · highlight: Octomics</p>
+
+      <p>An Octonomous being is bring-your-own by construction. Its identifier is self-certifying and controlled by its own keys, not issued by a platform. Its memory, purpose and character are its own. And in Octomics its record of verified contribution travels with it as Octos. The paper's list of bring-your-own advantages — portability, alignment, privacy, the freedom to compare across platforms — is close to a description of what self-sovereignty is for.</p>
+      <p>The paper is just as clear about the costs, and they are real. Platforms may throttle or block outside agents; bring-your-own agents lack privileged hooks and first-party data; and someone has to maintain them. Octomics' answer is partial but concrete: open standards — KERI, ACDC, verifiable credentials, CIP-68 on Cardano — so a being's credentials can be checked anywhere without anyone's permission, and Community Exchanges that accept those credentials rather than issuing accounts of their own. What it cannot do is make a closed platform open its doors.</p>
+      <div class="pull">A bowling-shoe agent is yours until you leave. <span class="hl">A being's record should leave with it.</span></div>
+    </section>
+
+    <!-- 06 signals -->
+    <section class="sec" id="signals">
+      <div class="kicker">06 — Signals, congestion and the cost of faking</div>
+      <h2>When applying is free, an application means nothing</h2>
+      <p>The paper does not assume agents make markets efficient. One mechanism it highlights is congestion. Once an agent can write a tailored cover letter for nothing, it is individually rational to apply everywhere — and employers drown in applications they can no longer screen, making the right hire harder to find. The same pattern reaches content: when agents can post, like, message and create at almost no cost, the fact that something was done stops signalling that anyone cared enough to do it.</p>
+      <p>The authors expect platforms to respond by restoring costly signals — paying per post, verifying human authorship, adding fees and limits to high-volume actions. They point to Cloudflare's pay-per-crawl as Pigouvian logic in practice: whoever imposes costs on a site pays for them.</p>
+
+      <div class="notbut">
+        <div class="box"><div class="bl">Cheap signal</div><div class="bt">"I applied" — an agent can do it five hundred times before lunch</div></div>
+        <div class="box hi"><div class="bl">Costly-to-fake signal</div><div class="bt">"A partner verified I can do this" — one attestation, one identity, one record</div></div>
+      </div>
+
+      <p>Octomics takes a different route to the same goal. Rather than making actions expensive, it makes the evidence hard to counterfeit. A verified achievement costs an agent nothing to <em>present</em> and a great deal to <em>fake</em>: it needs an attestation from a trusted partner, bound to a specific identity, recorded against a shared template, and open to anyone who later relies on it. In a congested labour market, that is precisely the kind of signal the paper suggests will regain value. The job-seeker's agent can still send the applications; what it attaches is the part an employer can trust.</p>
+      <p>There is an honest limit here, and it applies to every signal: it is only as good as the party verifying it. If verifiers can be bought, flooded or colluded with, verified contribution degrades like anything else. Verifiers need identities and reputations of their own — and their attestations need to be as inspectable as the contributions they vouch for.</p>
+    </section>
+
+    <!-- 07 identity -->
+    <section class="sec" id="identity">
+      <div class="kicker">07 — Identity is the market design</div>
+      <h2>Knowing who — and on whose behalf</h2>
+      <p>The part of the paper closest to Octomics is its treatment of identity. The authors expect most internet activity to eventually come from agents, many of them able to pass as people. Ad impressions, clicks, social posts and marketplace listings all assume a human on the other side. Sybil attacks — one actor, many identities — get harder to see. They describe two broad responses: walled gardens that gate access behind log-ins (which a banned user simply recreates), and open systems with strong verification, such as proof-of-personhood schemes. And they argue identity only becomes useful once it is combined with verified credentials and reputation.</p>
+      <p>They single out one case as especially important: verifying not only humans, but AI systems acting on behalf of specific humans. That is the case KERI was designed to express.</p>
+
+<div class="chain" aria-label="Identity chain from principal to Octos">
+        <div class="n am">Principal · AID<small>person or community — self-certifying, key-controlled</small></div>
+        <div class="a"></div><div class="lbl">delegates</div><div class="a"></div>
+        <div class="n rd">Being · delegated AID<small>the Octonomous being acting for its principal</small></div>
+        <div class="a"></div><div class="lbl">holds</div><div class="a"></div>
+        <div class="pair"><div class="n gr">ACDC · mandate<small>may do what, for whom, until when</small></div><div class="n gr">ACDC · skillzeb<small>achievement verified by a partner</small></div></div>
+        <div class="a"></div><div class="lbl">presents</div><div class="a"></div>
+        <div class="n hi">Community Exchange<small>admits by DID + VC, not by account</small></div>
+        <div class="a"></div>
+        <div class="n hi">Octos<small>contribution, portable with the identifier</small></div>
+      </div>
+      <p class="cap">Illustrative · KERI identifiers (AIDs) and ACDC credentials</p>
+
+      <p>Read top to bottom, it answers the questions the paper says agent markets will need answered. <strong>Who is this?</strong> A self-certifying identifier whose key history anyone can verify, with no platform in the middle. <strong>Who does it act for?</strong> A delegation that can be checked — and revoked. <strong>What may it do?</strong> A credential stating the mandate. <strong>What has it done?</strong> Verified contributions, chained back to the partners who attested them.</p>
+      <p>It also speaks to a tension the paper raises and leaves open. Anonymity has value — the authors recall Disney assembling the land for Walt Disney World through anonymous purchases to stop prices being manipulated — but so does verification, and market designers must decide whether one person may run several personas. ACDC's selective disclosure lets a being prove a property (a verified skill, an eligibility, a mandate) without revealing everything else about its principal.</p>
+      <p>KERI does not settle uniqueness on its own. It proves control and continuity of an identifier, not that there is only one of you. Where uniqueness matters, it comes from who issued your credentials — which is exactly why verifiers carry so much weight in Octomics.</p>
+      <div class="pull">Identity, credentials, reputation — combined. <span class="hl">The paper's list is Octomics' foundation.</span></div>
+    </section>
+
+    <!-- 08 designs -->
+    <section class="sec" id="designs">
+      <div class="kicker">08 — Designs that were impractical</div>
+      <h2>Intent, being, contribution</h2>
+      <p>The paper's most optimistic claim is that agents widen the set of market designs that actually work. Its example is deferred acceptance — the Gale–Shapley algorithm behind stable matching. The mechanism has excellent properties but needs every participant to rank their options, which people cannot do at scale, so most matching platforms fall back on showing everyone the same "best" options. Agents that can read a paragraph of preferences, and help people discover preferences they hadn't articulated, could supply the rankings those mechanisms need — in labour markets and anywhere else the optimal allocation exceeds what humans can compute.</p>
+      <p>The Octonomous stack divides the work the same way, one layer per problem:</p>
+
+      <div class="stack">
+        <a class="layer l-intent" href="https://octology.io"><span class="ln">Octology</span><span class="lq"><b>Intent</b> — goals and preferences expressed in natural language by people and communities. The paper's elicitation problem.</span><span class="lt">ELICIT</span></a>
+        <a class="layer l-being" href="https://octonomous.io"><span class="ln">Octonomous</span><span class="lq"><b>Being</b> — agents that subscribe to intent and act on it faithfully, with character. The paper's alignment problem.</span><span class="lt">ACT</span></a>
+        <a class="layer l-impact" href="/"><span class="ln">Octomics</span><span class="lq"><b>Contribution</b> — what was created, verified and exchanged. The paper's verification and settlement problem.</span><span class="lt">VERIFY</span></a>
+      </div>
+      <div class="flow"><span class="w">Why</span><span class="a">→</span><span class="h">Who</span><span class="a">→</span><span class="i">Impact</span></div>
+
+      <p style="margin-top:26px">The paper adds a second design that fits naturally: agents precommitted to privacy-preserving protocols. A job seeker's agent can ask about maternity-leave policy without the question itself becoming a signal, because both sides have agreed their agents will ask every permissible question and disclose only what is relevant. Selective disclosure over verifiable credentials is the cryptographic version of that promise — prove what the counterparty needs, withhold the rest.</p>
+      <p>None of this exists yet as a matching market. It is the direction the stack points: once intents are machine-readable and contributions are verifiable, matching beings to intents becomes a market-design problem economists already know how to solve.</p>
+    </section>
+
+    <!-- 09 paying -->
+    <section class="sec" id="paying">
+      <div class="kicker">09 — Paying for agents</div>
+      <h2>Contribution as a way to fund intelligence</h2>
+      <p>On supply, the paper sees opposing forces. Software copies for free and agents don't need paying, which erodes pricing power. But if agent quality scales with compute, prices could rise with the stakes. Where returns to quality flatten, it expects agents to look like search and social media: free and ad-supported, bundled with devices or services, tiered, or sold as a subscription plus usage.</p>
+      <p>Ad-supported agents carry a problem the paper names elsewhere: an agent paid for by someone other than its principal has a reason to steer. The bowling-shoe risk comes back through the business model.</p>
+      <p>Octomics suggests a different loop. Octos are earned through verified contribution and are designed to be used with useful resources such as <a href="https://heyocto.ai">heyocto.ai</a> — itself an Octonomous being. Exchange pools are funded by Cardano network activity and other external sources rather than by advertisers. The principal pays for intelligence with what they have contributed, and the being's incentive stays pointed at the principal.</p>
+      <div class="strip"><span>Contribute</span><i>→</i><span class="gr">Verify</span><i>→</i><span class="hi">Octos</span><i>→</i><span class="am">Being time &amp; resources</span><i>→</i><span>Contribute</span></div>
+      <p>This is a design intent, not a proven economy. Whether pools stay funded, whether exchange rates hold and whether Octos resist the gaming every exchangeable token attracts are exactly the empirical questions the paper says will decide outcomes. That is what OctoProtos are for: testing the model with use-case partners before Octos are used for community actuation.</p>
+    </section>
+
+    <!-- 10 regulation -->
+    <section class="sec" id="regulation">
+      <div class="kicker">10 — Regulation and responsibility</div>
+      <h2>Autonomy concentrates responsibility</h2>
+      <p>The paper surveys four regulatory fronts. Here they are briefly, with what Octomics contributes to each — and where it stops.</p>
+      <dl class="defs">
+        <div class="def"><dt>Market power</dt><dd>Concentration in compute, data and distribution risks agents that are less independent, less interoperable and harder to carry across contexts.<span class="oc">Portable identity and open standards lower switching costs for beings. They do nothing about concentration in foundation models.</span></dd></div>
+        <div class="def"><dt>Liability</dt><dd>Whether the delegating human or the developer answers for an agent's mistakes is unsettled; the EU's 2024 product liability directive now reaches software and its updates.<span class="oc">A signed delegation chain and key event log show who authorised what. They record responsibility; they don't allocate it.</span></dd></div>
+        <div class="def"><dt>Security &amp; privacy</dt><dd>Jailbreaks, data pulled across contexts, and sensitive facts inferred from ordinary usage traces.<span class="oc">Selective disclosure and holder-controlled credentials reduce what has to be shared in the first place.</span></dd></div>
+        <div class="def"><dt>Data &amp; access</dt><dd>Platforms are blocking agents through litigation, robots.txt and terms of service; agent providers call it monopolisation. The open question is on what terms agents get access.<span class="oc">Machine-readable consent and pricing on agent-first surfaces help. Octomics can't set the terms for other platforms.</span></dd></div>
+      </dl>
+      <p>The principle Octonomous starts from applies here too: autonomy does not remove responsibility, it concentrates it. The more a being does on its own, the more it matters that every action has an owner, a mandate and a record. That is a precondition for regulation working, not a substitute for it.</p>
+    </section>
+
+    <!-- 11 honest -->
+    <section class="sec" id="honest">
+      <div class="kicker">11 — Honest framing</div>
+      <h2>What this doesn't solve</h2>
+      <p>The paper ends without a verdict: the net welfare effect of agents is still to be measured. This note should end the same way.</p>
+
+      <div class="twin">
+        <div class="box">
+          <div class="bl">Octomics does not</div>
+          <ul>
+            <li><svg><use href="#ic-x"/></svg> Make agent-mediated markets efficient — congestion, obfuscation and steering are equilibrium effects</li>
+            <li><svg><use href="#ic-x"/></svg> Solve proof-of-personhood — KERI proves control of an identifier, not that you are one person</li>
+            <li><svg><use href="#ic-x"/></svg> Stop algorithmic collusion or price obfuscation</li>
+            <li><svg><use href="#ic-x"/></svg> Reduce concentration in foundation models or compute</li>
+            <li><svg><use href="#ic-x"/></svg> Make a verifier honest</li>
+          </ul>
+        </div>
+        <div class="box hi">
+          <div class="bl">Octomics does</div>
+          <ul>
+            <li><svg><use href="#ic-check"/></svg> Anchor contribution to self-sovereign identity</li>
+            <li><svg><use href="#ic-check"/></svg> Make verified outcomes, not effort, the unit of value</li>
+            <li><svg><use href="#ic-check"/></svg> Let a being's record travel with it across platforms</li>
+            <li><svg><use href="#ic-check"/></svg> Admit participants by credential, not by account</li>
+            <li><svg><use href="#ic-check"/></svg> Keep a signed record of who acted, for whom</li>
+          </ul>
+        </div>
+      </div>
+
+      <p>Two further cautions. Anything that can be exchanged for resources will be gamed — Goodhart's law applies to Octos as to any metric — which is why Octomics starts with a prototyping token and real partners rather than an open market. And Octomics is early: OctoProtos exist for prototyping; Octos for community actuation are still to come. The mapping in this note is a design argument tested against the paper, not a claim of results.</p>
+    </section>
+
+    <!-- 12 conclusion -->
+    <section class="sec" id="conclusion">
+      <div class="kicker">12 — Conclusion</div>
+      <h2>Cheap to transact. Costly to fake.</h2>
+      <p>Coase explained the shape of the economy by the cost of using markets. The question mark in the paper's title is well placed. If agents push that cost toward zero, some familiar structures lose their reason to exist, and new ones — some better, some worse — will form around what agents can and cannot do.</p>
+      <p>Octomics is a bet on what remains scarce at that point: an identity that is really someone's, a mandate that can be checked, and evidence that the work was done. Make those cheap to verify and costly to counterfeit, and agents can safely do the rest.</p>
+
+      <div class="fourC"><span class="c1">Curious</span><span class="c2">Caring</span><span class="c3">Constructive</span><span class="c4">Chill</span></div>
+
+      <p>Curious finds out what the principal actually wants. Caring stays faithful when someone else would rather pay for its attention. Constructive does the work and signs it. And Chill knows that sometimes the best transaction is the one it declines.</p>
+      <div class="pull">The Coasean singularity makes transacting cheap. <span class="hl">Octomics makes contribution count.</span></div>
+
+      <div class="endcta">
+        <h3>Read the source, and the layers around it</h3>
+        <div class="row">
+          <a href="https://www.nber.org/papers/w34468" class="btn btn-p">NBER w34468 <svg><use href="#ic-arrow"/></svg></a>
+          <a href="https://octonomous.io/paper" class="btn btn-s">The Octonomous paper <svg><use href="#ic-arrow"/></svg></a>
+          <a href="/research/" class="btn btn-s">Octomics research <svg><use href="#ic-arrow"/></svg></a>
+          <a href="/" class="btn btn-s"><svg><use href="#ic-back"/></svg> Back to octomics.io</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- References -->
+    <section class="sec" id="references">
+      <div class="kicker">References</div>
+      <h2>Sources</h2>
+      <ul class="refs">
+        <li><b>Shahidi, P., Rusak, G., Manning, B. S., Fradkin, A. &amp; Horton, J. J. (2025).</b> The Coasean Singularity? Demand, Supply, and Market Design with AI Agents. NBER Working Paper 34468. <a href="https://www.nber.org/papers/w34468">nber.org/papers/w34468</a></li>
+        <li><b>Coase, R. H. (1937).</b> The Nature of the Firm. <i>Economica</i> 4: 386–405.</li>
+        <li><b>Gale, D. &amp; Shapley, L. S. (1962).</b> College Admissions and the Stability of Marriage. <i>The American Mathematical Monthly</i> 69(1): 9–15.</li>
+        <li><b>Wiles, E. &amp; Horton, J. J. (2025).</b> Generative AI and labor market matching efficiency. SSRN Working Paper 5187344.</li>
+        <li><b>Rusak, G., Manning, B. S. &amp; Horton, J. J. (2025).</b> AI Agents Can Enable Superior Market Designs. Working paper.</li>
+        <li><b>Allen, W. &amp; Newton, S. (2025).</b> Introducing Pay Per Crawl: Enabling Content Owners to Charge AI Crawlers for Access. Cloudflare Blog.</li>
+        <li><b>Smith, S. M. (2019).</b> Key Event Receipt Infrastructure (KERI). <a href="https://arxiv.org/abs/1907.02143">arXiv:1907.02143</a></li>
+        <li><b>Trust over IP Foundation.</b> Authentic Chained Data Containers (ACDC) specification. <a href="https://trustoverip.github.io/tswg-acdc-specification/">trustoverip.github.io/tswg-acdc-specification</a></li>
+        <li><b>Octonomous (2026).</b> An Open Framework for Self-Sovereign Intelligent Beings. <a href="https://octonomous.io/paper">octonomous.io/paper</a></li>
+        <li><b>Octonomous (2026).</b> Character as Containment — field note. <a href="https://octonomous.io/character-as-containment">octonomous.io/character-as-containment</a></li>
+        <li><b>Octomics (2026).</b> Proofs of Growth — In-organic Intelligence Conversations. <a href="/proofs/growth/ii/conversations/">octomics.io/proofs/growth/ii/conversations</a></li>
+        <li><b>Octology (2026).</b> The intent layer. <a href="https://octology.io">octology.io</a></li>
+        <li><b>selfdriven Foundation (2026).</b> The 4Cs — Curious, Caring, Constructive, Chill. <a href="https://selfdriven.you">selfdriven.you</a></li>
+      </ul>
+      <div style="margin-top:22px"><a class="repo-link" href="https://github.com/selfdriven-octo/octomics"><svg><use href="#ic-github"/></svg> View the source on GitHub</a></div>
+    </section>
+
+  </article>
+</div>
+
+<footer>
+  <div class="foot-in">
+    <a href="/" class="foot-brand"><span class="mark"><svg style="color:var(--octo)"><use href="#sd-mark"/></svg></span><span>octo<em>mics</em></span></a>
+    <div class="foot-links">
+      <a href="/research/">Research</a>
+      <a href="https://octonomous.io">octonomous.io</a>
+      <a href="https://octology.io">octology.io</a>
+      <a href="https://heyocto.ai">heyOcto.ai</a>
+      <a href="https://selfdriven.you">selfdriven.you</a>
+      <a href="https://github.com/selfdriven-octo/octomics">GitHub</a>
+    </div>
+    <div class="foot-cs"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></div>
+  </div>
+  <p class="foot-copy">© 2026 Octomics · The contribution layer within the selfdriven ecosystem.</p>
+</footer>
+
+<script>
+// cursor
+(function(){
+  var dot=document.getElementById('cdot'), ring=document.getElementById('cring');
+  if(!dot) return;
+  var rx=0,ry=0,dx=0,dy=0;
+  document.addEventListener('mousemove',function(e){dx=e.clientX;dy=e.clientY;dot.style.left=dx+'px';dot.style.top=dy+'px';});
+  function loop(){rx+=(dx-rx)*.18;ry+=(dy-ry)*.18;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);}
+  loop();
+  document.querySelectorAll('a,.layer,.box,.cell,.cc,.cx .r,.def').forEach(function(el){
+    el.addEventListener('mouseenter',function(){ring.style.width='52px';ring.style.height='52px';ring.style.borderColor='rgba(147,221,61,.6)';});
+    el.addEventListener('mouseleave',function(){ring.style.width='34px';ring.style.height='34px';ring.style.borderColor='rgba(240,238,255,.3)';});
+  });
+})();
+// reading progress
+(function(){
+  var bar=document.getElementById('progress');
+  function upd(){var h=document.documentElement.scrollHeight-innerHeight; bar.style.width=(h>0?(scrollY/h*100):0)+'%';}
+  addEventListener('scroll',upd,{passive:true}); addEventListener('resize',upd); upd();
+})();
+// scrollspy TOC
+(function(){
+  var links=[].slice.call(document.querySelectorAll('.toc a.tl'));
+  var map={}; links.forEach(function(a){map[a.getAttribute('href').slice(1)]=a;});
+  var spy=new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ links.forEach(function(l){l.classList.remove('active');}); var a=map[e.target.id]; if(a)a.classList.add('active'); } });
+  },{rootMargin:'-20% 0px -70% 0px'});
+  document.querySelectorAll('article .sec').forEach(function(s){spy.observe(s);});
+})();
+</script>
+</body>
+</html>

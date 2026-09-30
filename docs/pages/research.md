@@ -10,4 +10,5 @@ permalink: /research/
 - [Proofs of Growth - In-organic Intelligence (GenAI) - Conversations](/proofs/growth/ii/conversations/)
 - [Energy Within - Games](/energy/within/games/)
 - [octochain Kit](https://octochain.network/kit)
+- [The Coasean Singularity — AI agents, transaction costs and verified contribution](/coasean-singularity/)
 
